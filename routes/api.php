@@ -55,5 +55,5 @@ Route::POST('testarray', 'TestingController@testarray');
 
 
 //*********** User Route ******************//
-Route::POST('login',    'UserController@login');
-Route::POST('registerpin', 'API\UserController@registerPin');
+Route::POST('login',        'API\UserController@login');
+Route::POST('registerpin',  'API\UserController@registerPin');
