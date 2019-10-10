@@ -32,38 +32,9 @@ class TestingController extends Controller
 
     public function testing(Request $request){
 
-$date = date('Y-m-d');
-$dt2 = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
+        $test = DB::select("select * from pum_trx_types_all where name like '%2A%'");
 
-$select = DB::select("select * from pum_trx_all where trx_date between '$dt2' and '$date'");
-
-dd($select);
-
-echo $date."<br>".$dt2;
-dd('s');
-
-        $startdate = date('Y-m-d', Carbon::today());
-        dd($startdate);
-
-        $nik    = DB::table('hr_employees')->select("emp_num")->where('name', 'DENY ROHMANDA')->get();
-        $pinUser= DB::table('users')->select('pin')->where('emp_num',$nik[0]->emp_num)->get(); dd($pinUser);
-        $cekPin = password_verify($request->pin,$pinUser[0]->pin);
-        if ($cekPin == false){
-            return response()->json(['error'=>true, 'message' => "pin salah"], 400);
-        }
-
-
-        $test   = DB::select("SELECT a.APPROVAL_EMP_ID4 as approval
-FROM `pum_app_hierar` a 
-LEFT JOIN `pum_trx_all` b on a.emp_id = b.emp_id 
-LEFT JOIN `pum_trx_lines_all` c on b.pum_trx_id = c.pum_trx_id
-where b.pum_trx_id = 1961
-and a.active_flag = 'Y'
-and c.amount BETWEEN a.proxy_amount_from AND a.proxy_amount_to");
-
-
-        dd('stop');
-
+        dd($test);
 
 
 
