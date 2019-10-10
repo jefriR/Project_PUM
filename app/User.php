@@ -69,4 +69,12 @@ class User extends Authenticatable
         }
 
     }
+
+    /**
+     * @return array
+     */
+    public function getCasts(): array
+    {
+        return $this->casts;
+    }
 }
