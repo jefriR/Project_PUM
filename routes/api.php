@@ -57,3 +57,10 @@ Route::POST('testarray', 'TestingController@testarray');
 //*********** User Route ******************//
 Route::POST('login',        'API\UserController@login');
 Route::POST('registerpin',  'API\UserController@registerPin');
+
+//*********** Create PUM Route ******************//
+Route::post('cekavailablepum',  'API\CreatePumController@cekAvailablePum');
+Route::get('getdept',           'API\CreatePumController@getDepartment');
+Route::get('gettrxtype',        'API\CreatePumController@gettrxtype');
+Route::post('getdocdetail',     'API\CreatePumController@getDocDetail');
+Route::post('createpum',        'API\CreatePumController@createPum');
