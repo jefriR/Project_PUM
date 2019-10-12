@@ -58,9 +58,13 @@ Route::POST('testarray', 'TestingController@testarray');
 Route::POST('login',        'API\UserController@login');
 Route::POST('registerpin',  'API\UserController@registerPin');
 
+//*********** Detail PUM Route ******************//
+Route::post('detailpum',        'API\DetailPumController@detailPum');
+
 //*********** Create PUM Route ******************//
 Route::post('cekavailablepum',  'API\CreatePumController@cekAvailablePum');
 Route::get('getdept',           'API\CreatePumController@getDepartment');
 Route::get('gettrxtype',        'API\CreatePumController@gettrxtype');
 Route::post('getdocdetail',     'API\CreatePumController@getDocDetail');
 Route::post('createpum',        'API\CreatePumController@createPum');
+

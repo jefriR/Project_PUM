@@ -12,7 +12,7 @@ class UserController extends Controller
     public function registerPin(Request $request){
         $validator = Validator::make($request->all(), [
             'emp_num' => 'required',
-            'password' => 'required | string',
+            'password' => 'required | string | MIN : 6',
             'pin' => 'required | MIN : 6 | MAX : 6'
         ]);
 
