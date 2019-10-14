@@ -23,4 +23,50 @@ class ResponsePum extends Model
         return $trxType;
     }
 
+    public function getTrxAll($pum_trx_id){
+        $getDataPum = DB::connection('api_pum')->table('pum_trx_all')->select('*')->where('PUM_TRX_ID', $pum_trx_id)->get()->toArray();
+
+        return $getDataPum;
+    }
+
+    public function getRespTrxId($emp_id){
+        $resp_trx_id = DB::connection('api_pum')->table('pum_resp_trx_all')->select('pum_resp_trx_id')->where('CREATED_BY', $emp_id)->max('pum_resp_trx_id');
+
+        return $resp_trx_id;
+    }
+
+    public function getTrxLineId($pum_id){
+        $trx_line_id    = DB::connection('api_pum')->table('pum_trx_lines_all')->select('PUM_TRX_LINE_ID')->where('PUM_TRX_ID', $pum_id)->get()->toArray();
+
+        return $trx_line_id;
+    }
+
+    public function getRespTrxNum($pum_id, $trx_num){
+        $respTrxNum = DB::connection('api_pum')->table('pum_resp_trx_all')->select('*')
+            ->where('PUM_TRX_ID', $pum_id)->max('PUM_RESP_TRX_NUM');
+
+        $temp   = substr($respTrxNum,(strlen($trx_num)+1));
+        $temp   = $temp+1;
+
+        return $trx_num.'_'.$temp;
+    }
+
+    public function getLineNum($pum_id){
+        $lineNum    = DB::connection('api_pum')->table('pum_resp_trx_all as pum_prta')->select('*')
+            ->leftJoin('pum_resp_trx_lines_all as pum_prtla', 'pum_prta.pum_resp_trx_id', 'pum_prtla.pum_resp_trx_id')
+            ->where('pum_prta.PUM_TRX_ID', $pum_id)
+            ->max('LINE_NUM');
+
+        return $lineNum+1;
+    }
+
+    public function updateDataAmount($pum_id, $amount){
+        $getAmountResp      = DB::connection('api_pum')->table('pum_trx_lines_all')->select('RESP_AMOUNT')->where('PUM_TRX_ID', $pum_id)->get()->toArray();
+        $getAmountResp      = $getAmountResp[0]->{'RESP_AMOUNT'} + $amount;
+        $getAmountRemaining = DB::connection('api_pum')->table('pum_trx_lines_all')->select('AMOUNT')->where('PUM_TRX_ID', $pum_id)->get()->toArray();
+        $getAmountRemaining = $getAmountRemaining[0]->{'AMOUNT'} - $getAmountResp;
+
+        DB::connection('api_pum')->table('pum_trx_lines_all')->where('pum_trx_id', $pum_id)->update(["RESP_AMOUNT"=>$getAmountResp, "AMOUNT_REMAINING" => $getAmountRemaining]);
+    }
+
 }

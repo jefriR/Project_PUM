@@ -32,9 +32,19 @@ class TestingController extends Controller
 
     public function testing(Request $request){
 
-        $test = DB::select("select * from pum_trx_types_all where name like '%2A%'");
 
-        dd($test);
+        $a = "satu";
+        $b = "satu_3";
+        $c = strlen($b);
+
+        $str    = substr($b,(strlen($a)+1));
+        $str = $str + 1;
+
+        $en = $a.'_'.$str;
+
+        dd($en);
+
+
 
 
 

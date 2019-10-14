@@ -125,10 +125,10 @@ class ApprovalController extends Controller
                 }
 
                 if ($flag == null) {
-                    $Approve = $model->approvePum($pum_id,$columntemp,$app_id,$columndate,$date, 'A');
+                    $model->approvePum($pum_id,$columntemp,$app_id,$columndate,$date, 'A');
                     $this->saveStatusApprovalPum($app_id,$pum_id,'APP');
                 } else {
-                    $Approve = $model->approvePum($pum_id,$columntemp,$app_id,$columndate,$date, $status);
+                    $model->approvePum($pum_id,$columntemp,$app_id,$columndate,$date, $status);
                     $this->saveStatusApprovalPum($app_id,$pum_id,'APP');
                 }
             } else {
