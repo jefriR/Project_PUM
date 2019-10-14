@@ -88,7 +88,6 @@ class User extends Authenticatable
             ->where('pum_ah.ACTIVE_FLAG', 'Y')
             ->where('pum_ah.ID', $getMaxAmount[0]->ID)->get()->toArray();
 
-
         return $dataUser;
     }
 

@@ -74,7 +74,7 @@ class CreatePumController extends Controller
             'emp_dept'      => 'required',
             'use_date'      => 'required | date',
             'resp_date'     => 'required | date',
-            'doc_num'       => 'required',
+            'doc_num'       => 'string',
             'trx_type'      => 'required',
             'description'   => 'required',
             'pin'           => 'required',
