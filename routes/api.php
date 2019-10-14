@@ -76,6 +76,10 @@ Route::post('approvepum',       'API\ApprovalController@approvePum');
 Route::post('getdataresponse',  'API\ResponsibilityController@getListData');
 Route::post('submitresponse',   'API\ResponsibilityController@submitResponsibility');
 
+//*********** History Pum Route ******************//
+Route::post('historycreatepum',         'API\HistoryPumController@historyCreatePum');
+Route::post('historyapprovepum',        'API\HistoryPumController@historyApprovalPum');
+
 
 /*
  emp_num ; 2001542903

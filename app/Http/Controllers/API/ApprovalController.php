@@ -108,7 +108,7 @@ class ApprovalController extends Controller
             // Cek Kode, apakah di Reject atau di Approve
             if ($kodeApp == 0) {
                 $model  = new ApprovalPum();
-                $reject = $model->rejectPum($pum_id,$columntemp,$app_id,$columndate,$date, $reason_val);
+                $model->rejectPum($pum_id,$columntemp,$app_id,$columndate,$date, $reason_val);
 
                 $this->saveStatusApprovalPum($app_id,$pum_id,'R');
                 return response()->json(['error' => false, 'message' => 'REJECT SUCCESS'], 200);
