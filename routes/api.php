@@ -68,3 +68,17 @@ Route::get('gettrxtype',        'API\CreatePumController@gettrxtype');
 Route::post('getdocdetail',     'API\CreatePumController@getDocDetail');
 Route::post('createpum',        'API\CreatePumController@createPum');
 
+//*********** Approval PUM Route ******************//
+Route::post('listapproval',     'API\ApprovalController@getListPum');
+Route::post('approvepum',       'API\ApprovalController@approvePum');
+
+////*********** Responsibility Pum Route ******************//
+Route::post('getdataresponse',  'API\ResponsibilityController@getListData');
+Route::post('submitresponse',   'API\ResponsibilityController@submitResponsibility');
+
+
+/*
+ emp_num ; 2001542903
+emp_id = 33287
+30.000.000 = 33287 & 33288 + 33387 & 33291
+ * */

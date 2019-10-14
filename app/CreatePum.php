@@ -33,13 +33,6 @@ class CreatePum extends Model
         return $docType;
     }
 
-    public function cekPin($emp_id){
-        $getEmpNum  = DB::connection('api_hr')->table('hr_employees')->select('EMP_NUM')->where('EMP_ID', $emp_id)->get()->toArray();
-        $getPin     = DB::connection('api_sys')->table('sys_user')->select('PIN')->where('USER_NAME', $getEmpNum[0]->EMP_NUM)->get()->toArray();
-
-        return $getPin[0]->PIN;
-    }
-
     public function getTrxNum(){
         $getTrxNum  = DB::connection('api_pum')->table('pum_trx_all')->select('TRX_NUM')->orderBy('PUM_TRX_ID')->get()->last();
         $getTrxNum  = $getTrxNum->{'TRX_NUM'};

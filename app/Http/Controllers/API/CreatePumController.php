@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\CreatePum;
 use App\trx_all;
 use App\trx_lines_all;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -100,12 +101,14 @@ class CreatePumController extends Controller
         $model          = new CreatePum();
         $insertTrx      = new trx_all();
         $insertTrxLines = new trx_lines_all();
+        $user           = new User();
         
         $trxNum         = $model->getTrxNum();
-        $getPin         = $model->cekPin($emp_id);
         $upload_data    = $trxNum.'_0';
 
-        $cekPin = password_verify($pin,$getPin);
+        // Cek PIN user sebelum Create PUM
+        $getPin = $user->checkPin($emp_id);
+        $cekPin = password_verify($pin,$getPin[0]->PIN);
         if ($cekPin == false) {
             return response()->json(['error' => true, 'message' => "Pin Not Match"], 400);
         }

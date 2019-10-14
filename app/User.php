@@ -70,7 +70,6 @@ class User extends Authenticatable
                 return 3;
             }
         }
-
     }
 
     public function getDataUser($email){
@@ -89,6 +88,12 @@ class User extends Authenticatable
             ->where('pum_ah.ID', $getMaxAmount[0]->ID)->get()->toArray();
 
         return $dataUser;
+    }
+
+    public function checkPin($emp_id){
+        $pinUser    = DB::connection('api_sys')->table('sys_user')->select('PIN')->where('EMP_ID', $emp_id)->get()->toArray();
+
+        return $pinUser;
     }
 
 }
