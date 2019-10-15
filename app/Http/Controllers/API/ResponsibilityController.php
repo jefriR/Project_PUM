@@ -103,6 +103,7 @@ class ResponsibilityController extends Controller
         $data->store_code       = $store_code;
         $data->save();
 
+        $model->updateRespStatus($pum_trx_id,$status);
         $model->updateDataAmount($pum_trx_id,$amount);
 
         return response()->json(['error'=>false, 'message' => "Success"], 200);

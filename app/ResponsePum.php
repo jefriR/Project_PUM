@@ -69,4 +69,8 @@ class ResponsePum extends Model
         DB::connection('api_pum')->table('pum_trx_lines_all')->where('pum_trx_id', $pum_id)->update(["RESP_AMOUNT"=>$getAmountResp, "AMOUNT_REMAINING" => $getAmountRemaining]);
     }
 
+    public function updateRespStatus($pum_id,$status){
+        DB::connection('api_pum')->table('pum_trx_all')->where('pum_trx_id', $pum_id)->update(["RESP_STATUS"=>$status]);
+    }
+
 }
