@@ -21,7 +21,7 @@ class CreatePum extends Model
     }
 
     public function getTrxType(){
-        $trx    = DB::connection('api_pum')->table('pum_trx_type_all')->select("PUM_TRX_TYPE_ID", "DESCRIPTION")->where('ACTIVE_FLAG', 'Y')->get()->toArray();
+        $trx    = DB::connection('api_pum')->table('pum_trx_types_all')->select("PUM_TRX_TYPE_ID", "DESCRIPTION")->where('ACTIVE_FLAG', 'Y')->get()->toArray();
 
         return $trx;
     }

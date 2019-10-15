@@ -32,18 +32,14 @@ class TestingController extends Controller
 
     public function testing(Request $request){
 
+    $test = DB::connection('api_sys', 'api_hr')->table('sys_user')->select('*')
+        ->leftJoin('api_hr.hr_employees as a', 'a.EMP_ID', 'sys_user.EMP_ID')
+        ->where('sys_user.USER_NAME', '2001542903')
+        ->get()->toArray();
 
-        $a = "satu";
-        $b = "satu_3";
-        $c = strlen($b);
 
-        $str    = substr($b,(strlen($a)+1));
-        $str = $str + 1;
 
-        $en = $a.'_'.$str;
-
-        dd($en);
-
+    dd($test);
 
 
 
