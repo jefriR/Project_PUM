@@ -43,7 +43,7 @@ class UserController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email' => 'required | string',
+            'emp_num' => 'required | string',
             'password' => 'required | string',
         ]);
 
@@ -51,11 +51,11 @@ class UserController extends Controller
             return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
         }
 
-        $email      = $request->email;
+        $emp_num    = $request->emp_num;
         $password   = md5($request->password);
 
         $model      = new User();
-        $return     = $model->login($email,$password);
+        $return     = $model->login($emp_num,$password);
 
         switch ($return){
             case  1:
@@ -63,7 +63,8 @@ class UserController extends Controller
             case 2:
                 return response()->json(['error' => true, 'message' => "Password Not Match"], 401);
             case 3:
-                $dataUser   = $model->getDataUser($email);
+                $dataUser   = $model->getDataUser($emp_num);
+//                $dataUser = 123;
                 return response()->json(['error' => true, 'message' => "Login Successfully", 'data' => $dataUser], 200);
             default:
                 return response()->json(['error' => true,'message' => "Something's Error"],422);

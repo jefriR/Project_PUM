@@ -60,6 +60,7 @@ Route::POST('registerpin',  'API\UserController@registerPin');
 
 //*********** Detail PUM Route ******************//
 Route::post('detailpum',        'API\DetailPumController@detailPum');
+Route::post('summarypum',       'API\DetailPumController@summaryPum');
 
 //*********** Create PUM Route ******************//
 Route::post('cekavailablepum',  'API\CreatePumController@cekAvailablePum');
