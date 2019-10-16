@@ -82,6 +82,10 @@ Route::post('historycreatepum',         'API\HistoryPumController@historyCreateP
 Route::post('historyapprovepum',        'API\HistoryPumController@historyApprovalPum');
 
 
+
+//TEST PDF
+Route::get('testpdf', 'TestingController@testingpdf');
+
 /*
  emp_num ; 2001542903
 emp_id = 33287

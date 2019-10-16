@@ -4,29 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Employees;
 use App\User;
+
 use Carbon\Carbon;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TestingController extends Controller
 {
-    public function testarray(Request $request){
-        $validator = Validator::make($request->all(),[
-            'data'     => 'required | array',
-        ]);
+    public function testingpdf(){
+        $data = DB::connection('api_hr')->table('hr_departments')->select('*')->where('NAME', 'DEV')->get()->toArray();
 
-        if ($validator->fails()) {
-            return response()->json(['error'=>true, 'message' => $validator->errors()], 401);
-        }
-
-        $datas  = $request->data;
-
-//        foreach ($datas as $data){
-//            echo  $data. ' ';
-//        }
-
-        return response()->json([], 200);
+        $pdf = PDF::loadview('data_pdf',['datas'=>$data]);
+        return $pdf->download('data-pdf');
     }
 
 

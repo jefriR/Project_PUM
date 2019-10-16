@@ -23,8 +23,8 @@ class ResponsePum extends Model
         return $trxType;
     }
 
-    public function getTrxAll($pum_trx_id){
-        $getDataPum = DB::connection('api_pum')->table('pum_trx_all')->select('*')->where('PUM_TRX_ID', $pum_trx_id)->get()->toArray();
+    public function getTrxAll($pum_trx_id, $emp_id){
+        $getDataPum = DB::connection('api_pum')->table('pum_trx_all')->select('*')->where('PUM_TRX_ID', $pum_trx_id)->where('EMP_ID', $emp_id)->get()->toArray();
 
         return $getDataPum;
     }

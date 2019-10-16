@@ -64,7 +64,6 @@ class UserController extends Controller
                 return response()->json(['error' => true, 'message' => "Password Not Match"], 401);
             case 3:
                 $dataUser   = $model->getDataUser($emp_num);
-//                $dataUser = 123;
                 return response()->json(['error' => true, 'message' => "Login Successfully", 'data' => $dataUser], 200);
             default:
                 return response()->json(['error' => true,'message' => "Something's Error"],422);
