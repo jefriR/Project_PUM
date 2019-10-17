@@ -25,7 +25,7 @@ class ApprovalController extends Controller
         $getPum = $model->getListPum($app_id);
 
         if ($getPum == 1){
-            return response()->json(['error' => false, 'message' => "Data Empty", 'data' => []], 200);
+            return response()->json(['error' => false, 'message' => "Data Empty"], 200);
         } else {
             return response()->json(['error' => false, 'message' => "Data Available", 'data' => $getPum], 200);
         }
@@ -119,7 +119,7 @@ class ApprovalController extends Controller
 
                 $flag = 0;
                 foreach ($cekFinal as $data) {
-                    if ($data->approval > 1) {
+                    if ($data->APPROVAL > 1) {
                         $flag = $flag + 1;
                     }
                 }

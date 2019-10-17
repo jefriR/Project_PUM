@@ -76,6 +76,7 @@ Route::post('approvepum',       'API\ApprovalController@approvePum');
 ////*********** Responsibility Pum Route ******************//
 Route::post('getdataresponse',  'API\ResponsibilityController@getListData');
 Route::post('submitresponse',   'API\ResponsibilityController@submitResponsibility');
+Route::post('historyresponse',  'API\ResponsibilityController@historyResponse');
 
 //*********** History Pum Route ******************//
 Route::post('historycreatepum',         'API\HistoryPumController@historyCreatePum');

@@ -31,7 +31,7 @@ class ResponsibilityController extends Controller
             $data->TRX_TYPE = $trxType;
         }
 
-        return response()->json(['error'=>false, 'message' => $getDataPum], 200);
+        return response()->json(['error' => false, 'message' => "Data Available", 'data' => $getDataPum], 200);
     }
 
     public function submitResponsibility(Request $request)
@@ -112,5 +112,27 @@ class ResponsibilityController extends Controller
             $model->updateDataAmount($pum_trx_id,$amount[$i]);
         }
         return response()->json(['error'=>false, 'message' => "Success"], 200);
+    }
+
+    public function historyResponse(Request $request){
+        $validator  = Validator::make($request->all(), [
+            'pum_trx_id'    => 'required | string',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $pum_trx_id = $request->pum_trx_id;
+        $model      = new ResponsePum();
+        $data       = $model->historyResponse($pum_trx_id);
+
+        if ($data == null){
+            return response()->json(['error' => false, 'message' => "Data Empty"], 200);
+        } else {
+            return response()->json(['error' => false, 'message' => "Data Available", 'data' => $data], 200);
+        }
+
     }
 }

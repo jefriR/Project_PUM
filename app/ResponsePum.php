@@ -12,6 +12,7 @@ class ResponsePum extends Model
             'pum_ptla.PUM_TRX_TYPE_ID', 'pum_ptla.AMOUNT', 'pum_ptla.AMOUNT_REMAINING', 'pum_ptla.DESCRIPTION', 'DEPT_ID as TRX_TYPE')
             ->leftJoin('pum_trx_lines_all as pum_ptla', 'pum_ptla.pum_trx_id', 'pum_pta.pum_trx_id')
             ->where('pum_pta.EMP_ID', $emp_id)
+            ->where('pum_pta.PUM_STATUS', 'I')
             ->get()->toArray();
 
         return $getPum;
@@ -71,6 +72,15 @@ class ResponsePum extends Model
 
     public function updateRespStatus($pum_id,$status){
         DB::connection('api_pum')->table('pum_trx_all')->where('pum_trx_id', $pum_id)->update(["RESP_STATUS"=>$status]);
+    }
+
+    public function historyResponse($pum_id){
+        $data   = DB::connection('api_pum')->table('pum_resp_trx_all as a')->select('a.PUM_RESP_TRX_NUM', 'a.RESP_DATE', 'b.AMOUNT')
+            ->leftJoin('pum_resp_trx_lines_all as b', 'b.PUM_RESP_TRX_ID', 'a.PUM_RESP_TRX_ID')
+            ->where('a.PUM_TRX_ID', $pum_id)
+            ->get()->toArray();
+
+        return $data;
     }
 
 }

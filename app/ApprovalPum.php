@@ -73,12 +73,14 @@ class ApprovalPum extends Model
     }
 
     public function checkFinalApp($pum_id, $nextApp){
-        $cekFinal = DB::connection('api_pum')->table('pum_app_hierar')->select('pum_app_hierar.'.$nextApp)
+        $amount    = DB::connection('api_pum')->table('pum_trx_lines_all')->select('AMOUNT')->where('PUM_TRX_ID', $pum_id)->first();
+
+        $cekFinal = DB::connection('api_pum')->table('pum_app_hierar')->select('pum_app_hierar.'.$nextApp.' as APPROVAL')
             ->leftJoin('pum_trx_all as pum_pta', 'pum_pta.emp_id', 'pum_app_hierar.emp_id')
             ->leftJoin('pum_trx_lines_all as pum_ptla', 'pum_ptla.pum_trx_id', 'pum_pta.pum_trx_id')
             ->where('pum_pta.PUM_TRX_ID', $pum_id)
             ->where('pum_app_hierar.ACTIVE_FLAG', 'Y')
-            ->whereRaw("? BETWEEN PROXY_AMOUNT_FROM AND PROXY_AMOUNT_TO", ['pum_ptla.AMOUNT'])
+            ->whereRaw("? BETWEEN PROXY_AMOUNT_FROM AND PROXY_AMOUNT_TO", [$amount->AMOUNT])
             ->get()->toArray();
 
         return $cekFinal;
