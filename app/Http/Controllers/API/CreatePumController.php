@@ -37,9 +37,19 @@ class CreatePumController extends Controller
         }
     }
 
-    public function getDepartment(){
+    public function getDepartment(Request $request){
+        $validator = Validator::make($request->all(), [
+            'org_id'            => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $org_id     = $request->org_id;
+
         $model      = new CreatePum();
-        $department = $model->getDepartment();
+        $department = $model->getDepartment($org_id);
 
         return response()->json(['error' => false, 'message' => "Data Available", 'data' => $department], 200);
     }

@@ -24,11 +24,11 @@ class HistoryPumController extends Controller
 
         $emp_id = $request->emp_id;
         if ($request->status != null){
-            $status     = $request->status;
+            $status     = [$request->status];
             $start_date = $request->start_date;
             $end_date   = $request->end_date;
         } else {
-            $status = 'A';
+            $status = ['A', 'N', 'I', 'R', 'APP1', 'APP2', 'APP3', 'APP4', 'APP5'];
             $start_date = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
             $end_date   = date('Y-m-d');
         }
@@ -59,11 +59,11 @@ class HistoryPumController extends Controller
 
         $emp_id = $request->emp_id;
         if ($request->status != null){
-            $status     = $request->status;
+            $status     = [$request->status];
             $start_date = $request->start_date;
             $end_date   = $request->end_date;
         } else {
-            $status = 'APP';
+            $status = ['APP', 'R'];
             $start_date = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
             $end_date   = date('Y-m-d');
         }

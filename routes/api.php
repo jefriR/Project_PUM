@@ -12,45 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
 Route::get('test', 'TestingController@testing');
 Route::POST('testarray', 'TestingController@testarray');
-
-
-//
-////*********** User Route ******************//
-//Route::POST('login',    'UserController@login');
-//Route::POST('register', 'UserController@register');
-//
-////*********** Detail PUM Route ******************//
-//Route::post('detailpum',        'PumController\DetailPumController@detailPum');
-//Route::post('summarycreatepum', 'PumController\DetailPumController@summaryCreatePum');
-//
-////*********** Create PUM Route ******************//
-//Route::post('cekavailablepum',  'PumController\CreatePumController@cekAvailablePum');
-//Route::get('getdept',           'PumController\CreatePumController@getdept');
-//Route::get('gettrxtype',        'PumController\CreatePumController@gettrxtype');
-//Route::post('getdocdetail',     'PumController\CreatePumController@getDocDetail');
-//Route::post('createpum',        'PumController\CreatePumController@createPum');
-//
-//
-////*********** Approval PUM Route ******************//
-//Route::post('listapproval',     'PumController\ApprovalController@listApproval');;
-//Route::post('approvepum',       'PumController\ApprovalController@approvePum');
-//
-////*********** History Pum Route ******************//
-//Route::post('historycreatepum',         'PumController\HistoryPumController@historyCreatePum');
-//Route::post('filterhistorycreatepum',   'PumController\HistoryPumController@filterHistoryCreatePum');
-//Route::post('historyapprovepum',        'PumController\HistoryPumController@historyApprovalPum');
-//
-////*********** Responsibility Pum Route ******************//
-//Route::post('getdataresponse',  'PumController\ResponsibilityController@getAllData');
-//Route::post('submitresponse',     'PumController\ResponsibilityController@submitResponsibility');
-//
 
 
 
@@ -64,7 +27,7 @@ Route::post('summarypum',       'API\DetailPumController@summaryPum');
 
 //*********** Create PUM Route ******************//
 Route::post('cekavailablepum',  'API\CreatePumController@cekAvailablePum');
-Route::get('getdept',           'API\CreatePumController@getDepartment');
+Route::post('getdept',           'API\CreatePumController@getDepartment');
 Route::get('gettrxtype',        'API\CreatePumController@getTrxType');
 Route::post('getdocdetail',     'API\CreatePumController@getDocDetail');
 Route::post('createpum',        'API\CreatePumController@createPum');
@@ -82,6 +45,8 @@ Route::post('historyresponse',  'API\ResponsibilityController@historyResponse');
 Route::post('historycreatepum',         'API\HistoryPumController@historyCreatePum');
 Route::post('historyapprovepum',        'API\HistoryPumController@historyApprovalPum');
 
+//*********** Reporting Route ******************//
+Route::get('getreportindex', 'ReportAPI\ReportController@index');
 
 
 //TEST PDF

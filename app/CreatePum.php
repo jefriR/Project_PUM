@@ -14,8 +14,9 @@ class CreatePum extends Model
         return $totalPum;
     }
 
-    public function getDepartment(){
-        $getDept    = DB::connection('api_hr')->table('hr_departments')->select("DEPT_ID", "NAME", "DESCRIPTION")->get()->toArray();
+    public function getDepartment($org_id){
+        $getDept    = DB::connection('api_hr')->table('hr_departments')->select("DEPT_ID", "NAME", "DESCRIPTION")
+            ->where('ORG_ID', $org_id)->get()->toArray();
 
         return $getDept;
     }
