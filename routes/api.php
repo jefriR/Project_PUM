@@ -46,7 +46,9 @@ Route::post('historycreatepum',         'API\HistoryPumController@historyCreateP
 Route::post('historyapprovepum',        'API\HistoryPumController@historyApprovalPum');
 
 //*********** Reporting Route ******************//
-Route::get('getreportindex', 'ReportAPI\ReportController@index');
+Route::get('getdeptreport', 'ReportAPI\ReportController@getDeptReport');
+Route::get('getempreport',  'ReportAPI\ReportController@getEmpReport');
+Route::post('prosesreport', 'ReportAPI\ProsesReportController@prosesReport');
 
 
 //TEST PDF
