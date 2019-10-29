@@ -40,10 +40,10 @@
                 @foreach($datas as $data)
                     <tr>
                         <td>{{ $i++ }}</td>
+                        <td>{{ $data->PUM_TRX_ID }}</td>
+                        <td>{{ $data->EMP_ID}}</td>
                         <td>{{ $data->DEPT_ID }}</td>
-                        <td>{{ $data->NAME }}</td>
-                        <td>{{ $data->ORG_ID }}</td>
-                        <td>{{ $data->DESCRIPTION }}</td>
+                        <td>{{ $data->PUM_STATUS}}</td>
                     </tr>
                 @endforeach
                 </tbody>

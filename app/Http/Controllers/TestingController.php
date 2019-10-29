@@ -6,6 +6,7 @@ use App\Employees;
 use App\User;
 
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +17,22 @@ class TestingController extends Controller
     public function testingpdf(){
         $data = DB::connection('api_hr')->table('hr_departments')->select('*')->where('NAME', 'DEV')->get()->toArray();
 
-        $pdf = PDF::loadview('data_pdf',['datas'=>$data]);
-        return $pdf->download('data-pdf');
+//        $pdf = new Dompdf();
+//        $pdf->setPaper('A4', 'landscape');
+//
+//       PDF_SetFont('times', 'B', 9);
+//       PDF_TA
+//        $pdf->MultiCell(8, 12, 'No', 1, 'C', 0, 0, '', '', true);
+//        $pdf->MultiCell(16, 12, 'PUM Number', 1, 'C', 0, 0, '', '', true);
+//        $pdf->MultiCell(18, 12, 'Create Date', 1, 'C', 0, 0, '', '', true);
+//        $pdf->stream();
+
+
+
+        $pdf = PDF::loadview('permohonanPum',['datas'=>$data]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
+//        return $pdf->download('data-pdf');
     }
 
 

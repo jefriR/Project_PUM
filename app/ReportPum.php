@@ -23,19 +23,83 @@ class ReportPum extends Model
         return $emp;
     }
 
-    public function prosesData($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $valdiate_end_date){
-        $data   = DB::connection('api_pum')->table('pum_trx_all as a')
-            ->select('a.*')
+    public function findDataUser($emp_id, $dept_id){
+        $empData    = DB::connection('api_hr')->table('hr_employees')->select('EMP_NUM', 'NAME')->where('EMP_ID', $emp_id)->get()->toArray();
+        $deptData   = DB::connection('api_hr')->table('hr_departments')->select('DESCRIPTION', 'NAME')->where('DEPT_ID', $dept_id)->get()->toArray();
+        $dataUser   = [$empData[0],$deptData[0]];
+
+        return $dataUser;
+    }
+
+    public function cekAppName($temp){
+        $data = $temp;
+
+        foreach ($data as $app){
+            for ($i = 1; $i < 5; $i++){
+                if ($i == 1) {
+                    $appId = $app->APPROVAL_EMP_ID1;
+                } else if ($i == 2) {
+                    $appId = $app->APPROVAL_EMP_ID2;
+                } else if ($i == 3) {
+                    $appId = $app->APPROVAL_EMP_ID3;
+                } else if ($i == 4) {
+                    $appId = $app->APPROVAL_EMP_ID4;
+                }
+
+                $search = DB::connection('api_hr')->table('hr_employees')
+                    ->select('NAME')
+                    ->where('EMP_ID', $appId)
+                    ->get()->toArray();
+
+                if ($search != null){
+                    if ($i == 1) {
+                        $app->APPROVAL_EMP_ID1 = $search[0]->NAME;
+                    } else if ($i == 2) {
+                        $app->APPROVAL_EMP_ID2 = $search[0]->NAME;
+                    } else if ($i == 3) {
+                        $app->APPROVAL_EMP_ID3 = $search[0]->NAME;
+                    } else if ($i == 4) {
+                        $app->APPROVAL_EMP_ID4 = $search[0]->NAME;
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    public function permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date){
+        $search   = DB::connection('api_pum')->table('pum_trx_all as a')
+            ->select('a.*','a.TRX_NUM as PUM_NUM', 'c.EMP_NUM as EMP_NUM', 'c.NAME as EMP_NAME', 'd.DESCRIPTION as DESC_PUM', 'd.AMOUNT as AMOUNT')
             ->leftJoin('history_app_pums as b', 'b.PUM_TRX_ID', 'a.PUM_TRX_ID')
+            ->leftJoin('api_hr.hr_employees as c', 'c.EMP_ID', 'a.EMP_ID')
+            ->leftJoin('pum_trx_lines_all as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
             ->where('a.EMP_ID', $emp_id)
             ->where('a.DEPT_ID', $dept_id)
             ->whereBetween('a.TRX_DATE', [$create_start_date, $create_end_date])
-            ->where('a.PUM_STATUS', $pum_status)
-            ->where('a.RESP_STATUS', $resp_status)
-            ->whereBetween('b.CREATED_AT', [$validate_start_date, $valdiate_end_date])
+            ->whereIn('a.PUM_STATUS', $pum_status)
+            ->whereIn('a.RESP_STATUS', $resp_status)
+            ->whereBetween('b.CREATED_AT', [$validate_start_date, $validate_end_date])
             ->get()->toArray();
 
+        $data = $this->cekAppName($search);
+
         return $data;
+    }
+
+    public function responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date){
+        $data   = DB::connection('api_pum')->table('pum_resp_trx_all as a')
+            ->select('*')
+            ->leftJoin('pum_resp_trx_lines_all as b',  'b.PUM_RESP_TRX_ID', 'a.PUM_RESP_TRX_ID')
+            ->leftJoin('pum_trx_all as c', 'c.PUM_TRX_ID', 'a.PUM_TRX_ID')
+            ->leftJoin('history_app_pums as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
+            ->where('c.EMP_ID', $emp_id)
+            ->where('c.DEPT_ID', $dept_id)
+            ->whereBetween('c.TRX_DATE', [$create_start_date, $create_end_date])
+            ->whereIn('c.PUM_STATUS', $pum_status)
+            ->whereIn('c.RESP_STATUS', $resp_status)
+            ->whereBetween('d.CREATED_AT', [$validate_start_date, $validate_end_date])
+            ->get()->toArray();
     }
 }
 

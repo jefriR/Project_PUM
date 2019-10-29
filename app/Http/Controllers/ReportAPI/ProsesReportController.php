@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\ReportAPI;
 
 use App\ReportPum;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
+use PDF;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -41,14 +44,38 @@ class ProsesReportController extends Controller
 //        $group_by           = $request->group_by;
 
         if ($pum_status == 'ALL') {
-            $pum_status = ['N', 'APP1', 'APP2', 'APP3', 'APP4', 'A', 'I'];
+            $pum_sts = ['N', 'APP1', 'APP2', 'APP3', 'APP4', 'A', 'I'];
+        } else {
+            $pum_sts = [$pum_status];
         }
         if ($resp_status == 'ALL'){
-            $resp_status = ['N','F','P','I'];
+            $resp_sts = ['N','F','P','I'];
+        } else {
+            $resp_sts = [$resp_status];
         }
 
-        $model      = new ReportPum();
-        $prosesData = $model->prosesData($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $valdiate_end_date);
+        $model  = new ReportPum();
+        $user   = $model->findDataUser($emp_id, $dept_id);
+        $temp   = null;
+        $today  = date('d-m-Y');
+        $temp   = [$create_start_date,$create_end_date,$validate_start_date,$valdiate_end_date, $pum_status, $resp_status, $today];
 
-        return response()->json(['error' => false, 'message' => "Data Available", 'data' => $prosesData], 200);
-    }}
+        if ($report_type == 1){
+            $dataPum  = $model->permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $valdiate_end_date);
+        } elseif ($report_type == 2){
+            $dataPum  = $model->responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $valdiate_end_date);
+        }
+
+        return response()->json(['error' => false, 'message' => "Data Available", 'data' => $dataPum], 200);
+
+
+
+        $pdf = PDF::loadview('permohonanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('Reporting');
+    }
+
+
+
+
+}

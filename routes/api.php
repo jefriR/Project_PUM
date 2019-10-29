@@ -54,6 +54,11 @@ Route::post('prosesreport', 'ReportAPI\ProsesReportController@prosesReport');
 //TEST PDF
 Route::get('testpdf', 'TestingController@testingpdf');
 
+Route::get('view', function (){
+    return view('permohonanPum');
+});
+
+
 /*
  emp_num ; 2001542903
 emp_id = 33287
