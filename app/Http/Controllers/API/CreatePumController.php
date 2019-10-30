@@ -6,6 +6,7 @@ use App\CreatePum;
 use App\trx_all;
 use App\trx_lines_all;
 use App\User;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -85,13 +86,16 @@ class CreatePumController extends Controller
             'emp_dept'      => 'required',
             'use_date'      => 'required | date',
             'resp_date'     => 'required | date',
-            'doc_num'       => 'string',
+            'doc_num'       => 'required',
             'trx_type'      => 'required',
             'description'   => 'required',
             'pin'           => 'required',
             'amount'        => 'required',
             'file_data'     => 'required | file',
+            'org_id'        => 'required',
         ]);
+
+
 
         if ($validator->fails()) {
             return response()->json(['error' => true, 'message' => "Required Parameters are Missing or Empty"], 401);
@@ -107,6 +111,7 @@ class CreatePumController extends Controller
         $amount         = $request->amount;
         $file_data      = $request->file_data;
         $pin            = $request->pin;
+        $org_id         = $request->org_id;
 
         $model          = new CreatePum();
         $insertTrx      = new trx_all();
@@ -123,6 +128,12 @@ class CreatePumController extends Controller
             return response()->json(['error' => true, 'message' => "Pin Not Match"], 400);
         }
 
+        if ($doc_num == '-') {
+            $pumStatus = 'N';
+        } else {
+            $pumStatus = 'A';
+        }
+
         $insertTrx->trx_num          = $trxNum;
         $insertTrx->trx_date         = date('Y-m-d');
         $insertTrx->emp_id           = $emp_id;
@@ -130,8 +141,9 @@ class CreatePumController extends Controller
         $insertTrx->po_number        = $doc_num;
         $insertTrx->use_date         = $use_date;
         $insertTrx->resp_estimate_date = $response_date;
-        $insertTrx->pum_status       = 'N';
+        $insertTrx->pum_status       = $pumStatus;
         $insertTrx->resp_status      = 'N';
+        $insertTrx->org_id           = $org_id;
         $insertTrx->files_data       = $file_data;
         $insertTrx->upload_data      = $upload_data;
         $insertTrx->save();

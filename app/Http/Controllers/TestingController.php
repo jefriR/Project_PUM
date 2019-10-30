@@ -29,8 +29,8 @@ class TestingController extends Controller
 
 
 
-        $pdf = PDF::loadview('permohonanPum',['datas'=>$data]);
-        $pdf->setPaper('A4', 'landscape');
+        $pdf = PDF::loadview('pertanggungjawabanPum',['datas'=>$data]);
+        $pdf->setPaper('A4', 'potrait');
         return $pdf->stream();
 //        return $pdf->download('data-pdf');
     }

@@ -45,6 +45,7 @@ class ResponsibilityController extends Controller
             'store_code'    => 'required | array',
             'image'         => 'required | array',
             'kode'          => 'required',
+            'org_id'        => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -59,6 +60,7 @@ class ResponsibilityController extends Controller
         $store_code = $request->store_code;
         $image      = $request->image;
         $kodeResp   = $request->kode;
+        $org_id     = $request->org_id;
 
         for ($i = 0; $i < sizeof($trx_type); $i++){
             $model      = new ResponsePum();
@@ -83,6 +85,7 @@ class ResponsibilityController extends Controller
             $data->pum_trx_id       = $request->pum_trx_id;
             $data->resp_date        = $date;
             $data->resp_status      = $status;
+            $data->org_id           = $org_id;
             $data->created_by       = $emp_id;
             $data->creation_date    = $date;
             $data->approval_emp_id1 = $getDataPum->APPROVAL_EMP_ID1;

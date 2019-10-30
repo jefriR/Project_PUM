@@ -27,7 +27,7 @@
             height: 18px;
         }
         .date{
-        text-align: right;
+            text-align: right;
             font-size: 9px;
         }
     </style>
@@ -41,13 +41,15 @@
 </div>
 
 <div class="headerReport">
-    <h2><strong>LISTING DATA PAPERLESS UMD (Detail Permohonan)</strong></h2>
+    <h2><strong>LISTING DATA PAPERLESS UMD</strong></h2>
+    <h2><strong>(Pertanggungjawaban)</strong></h2>
     <p>{{ $DEPT_CODE }} - {{ $DEPT_NAME }}</p>
     <p>{{ $EMP_NUM }} - {{ $EMP_NAME }}</p>
     <p>Periode PUM : {{ $TEMP[0] }} - {{ $TEMP[1] }}</p>
     <p>Validate PUM : {{ $TEMP[2] }} - {{ $TEMP[3] }}</p>
     <p>PUM Status : {{ $TEMP[4] }}</p>
     <p>RESP Status : {{ $TEMP[5] }}</p>
+
 </div>
 
 <p style="color: white">{{ $i = 1 }} {{ $grandTotal = 0 }}</p>
@@ -55,44 +57,26 @@
     <thead>
     <tr>
         <th style="width: 30px">No</th>
-        <th style="width: 50px">PUM <br> Number</th>
-        <th style="width: 50px">Create <br> Date</th>
-        <th style="width: 50px">Use Date</th>
-        <th style="width: 50px">Emp <br> Number</th>
-        <th style="width: 100px">Emp Name</th>
-        <th style="width: 35px">PUM <br> Status</th>
-        <th style="width: 30px">RESP <br> Status</th>
-        <th style="width: 200px">Description</th>
-        <th style="width: 65px">Appr 1</th>
-        <th style="width: 65px">Appr 2</th>
-        <th style="width: 65px">Appr 3</th>
-        <th style="width: 65px">Appr 4</th>
-        <th style="width: 65px">PUM <br> Amount</th>
+        <th style="width: 110px">Resp. Trx Num</th>
+        <th style="width: 90px">Resp. Status</th>
+        <th style="width: 90px">Resp. Create <br> Date</th>
+        <th style="width: 140px">Resp. Amount</th>
     </tr>
     </thead>
     <tbody>
-    <tr><td colspan="14"></td></tr>
+    <tr><td colspan="5"></td></tr>
     @foreach($datas as $data)
         <tr>
             <td>{{ $i++ }}</td>
-            <td>{{ $data->PUM_NUM}}</td>
-            <td>{{ $data->TRX_DATE }}</td>
-            <td>{{ $data->USE_DATE }}</td>
-            <td>{{ $data->EMP_NUM}}</td>
-            <td>{{ $data->EMP_NAME}}</td>
-            <td>{{ $data->PUM_STATUS}}</td>
-            <td>{{ $data->RESP_STATUS}}</td>
-            <td>{{ $data->DESC_PUM}}</td>
-            <td>{{ $data->APPROVAL_EMP_ID1}}</td>
-            <td>{{ $data->APPROVAL_EMP_ID2}}</td>
-            <td>{{ $data->APPROVAL_EMP_ID3}}</td>
-            <td>{{ $data->APPROVAL_EMP_ID4}}</td>
+            <td>{{ $data->PUM_RESP_TRX_NUM}}</td>
+            <td>{{ $data->RESP_STATUS }}</td>
+            <td>{{ $data->CREATION_DATE }}</td>
             <td>{{ $data->AMOUNT}}</td>
         </tr>
         {{ $grandTotal = $grandTotal + $data->AMOUNT }}
     @endforeach
     <tr>
-        <td colspan="13"><strong>GRAND TOTAL</strong></td>
+        <td colspan="4"><strong>GRAND TOTAL</strong></td>
         <td>{{ $grandTotal}}</td>
     </tr>
     </tbody>

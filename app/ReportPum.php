@@ -68,18 +68,18 @@ class ReportPum extends Model
         return $data;
     }
 
-    public function permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date){
+    public function permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){
         $search   = DB::connection('api_pum')->table('pum_trx_all as a')
             ->select('a.*','a.TRX_NUM as PUM_NUM', 'c.EMP_NUM as EMP_NUM', 'c.NAME as EMP_NAME', 'd.DESCRIPTION as DESC_PUM', 'd.AMOUNT as AMOUNT')
-            ->leftJoin('history_app_pums as b', 'b.PUM_TRX_ID', 'a.PUM_TRX_ID')
             ->leftJoin('api_hr.hr_employees as c', 'c.EMP_ID', 'a.EMP_ID')
             ->leftJoin('pum_trx_lines_all as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
             ->where('a.EMP_ID', $emp_id)
             ->where('a.DEPT_ID', $dept_id)
+            ->where('a.ORG_ID', $org_id)
             ->whereBetween('a.TRX_DATE', [$create_start_date, $create_end_date])
             ->whereIn('a.PUM_STATUS', $pum_status)
             ->whereIn('a.RESP_STATUS', $resp_status)
-            ->whereBetween('b.CREATED_AT', [$validate_start_date, $validate_end_date])
+            ->whereBetween('a.FINAL_DATE', [$validate_start_date, $validate_end_date])
             ->get()->toArray();
 
         $data = $this->cekAppName($search);
@@ -87,19 +87,22 @@ class ReportPum extends Model
         return $data;
     }
 
-    public function responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date){
+    public function responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){
         $data   = DB::connection('api_pum')->table('pum_resp_trx_all as a')
-            ->select('*')
+            ->select('a.PUM_RESP_TRX_NUM', 'a.RESP_STATUS', 'a.CREATION_DATE', 'b.AMOUNT')
             ->leftJoin('pum_resp_trx_lines_all as b',  'b.PUM_RESP_TRX_ID', 'a.PUM_RESP_TRX_ID')
             ->leftJoin('pum_trx_all as c', 'c.PUM_TRX_ID', 'a.PUM_TRX_ID')
-            ->leftJoin('history_app_pums as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
             ->where('c.EMP_ID', $emp_id)
             ->where('c.DEPT_ID', $dept_id)
+            ->where('c.ORG_ID', $org_id)
             ->whereBetween('c.TRX_DATE', [$create_start_date, $create_end_date])
             ->whereIn('c.PUM_STATUS', $pum_status)
             ->whereIn('c.RESP_STATUS', $resp_status)
-            ->whereBetween('d.CREATED_AT', [$validate_start_date, $validate_end_date])
+            ->whereIn('a.RESP_STATUS', ['I','A'])
+            ->whereBetween('c.FINAL_DATE', [$validate_start_date, $validate_end_date])
             ->get()->toArray();
+
+        return $data;
     }
 }
 
