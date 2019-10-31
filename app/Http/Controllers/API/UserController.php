@@ -68,7 +68,33 @@ class UserController extends Controller
             default:
                 return response()->json(['error' => true,'message' => "Something's Error"],422);
         }
+    }
 
+    public function changePin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old_pin'   => 'required | string',
+            'new_pin'   => 'required | string | min:6 | max:6',
+            'emp_id'    => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $oldPin = $request->old_pin;
+        $newPin = $request->new_pin;
+        $emp_id = $request->emp_id;
+
+        $model  = new User();
+        $getPin = $model->checkPin($emp_id);
+        $cekPin = password_verify($oldPin,$getPin[0]->PIN);
+        if ($cekPin == false) {
+            return response()->json(['error' => true, 'message' => "Pin Not Match"], 400);
+        }
+
+        $model->changePin($emp_id,$newPin);
+
+        return response()->json(['error' => false, 'message' => "Update Pin Success "], 200);
     }
 
 

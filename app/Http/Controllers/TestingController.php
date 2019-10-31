@@ -7,6 +7,7 @@ use App\User;
 
 use Carbon\Carbon;
 use Dompdf\Dompdf;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,36 +18,44 @@ class TestingController extends Controller
     public function testingpdf(){
         $data = DB::connection('api_hr')->table('hr_departments')->select('*')->where('NAME', 'DEV')->get()->toArray();
 
-//        $pdf = new Dompdf();
-//        $pdf->setPaper('A4', 'landscape');
-//
-//       PDF_SetFont('times', 'B', 9);
-//       PDF_TA
-//        $pdf->MultiCell(8, 12, 'No', 1, 'C', 0, 0, '', '', true);
-//        $pdf->MultiCell(16, 12, 'PUM Number', 1, 'C', 0, 0, '', '', true);
-//        $pdf->MultiCell(18, 12, 'Create Date', 1, 'C', 0, 0, '', '', true);
-//        $pdf->stream();
-
-
-
         $pdf = PDF::loadview('pertanggungjawabanPum',['datas'=>$data]);
         $pdf->setPaper('A4', 'potrait');
         return $pdf->stream();
 //        return $pdf->download('data-pdf');
     }
 
+    public function testarray(Request $request){
+        $file = $request->file('image');
+//        $name = $file->getClientOriginalName();
+//        $path = $file->storeAs('public',$name);
+//        $ph = Storage::disk('public_uploads')->put( $name);
+
+        echo base_path(). '<br>';
+
+// Path to the 'app' folder
+        echo app_path(). '<br>';
+
+// Path to the 'public' folder
+        echo public_path(). '<br>';
+
+// Path to the 'storage' folder
+        echo storage_path(). '<br>';
+
+// Path to the 'storage/app' folder
+        echo storage_path('app'). '<br>';
+
+        $get = url('public/storage/Koala.jpg');
+        return $get;
+
+    }
+
 
     public function testing(Request $request){
 
-    $test = DB::connection('api_sys', 'api_hr')->table('sys_user')->select('*')
-        ->leftJoin('api_hr.hr_employees as a', 'a.EMP_ID', 'sys_user.EMP_ID')
-        ->where('sys_user.USER_NAME', '2001542903')
-        ->get()->toArray();
+        $url = Storage::get('public/storage/login.png');
 
-
-
-    dd($test);
-
+        return $url;
+        dd('asd');
 
 
 

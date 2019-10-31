@@ -83,6 +83,7 @@ class CreatePumController extends Controller
     public  function createPum(Request $request){
         $validator = Validator::make($request->all(), [
             'emp_id'        => 'required | string',
+            'user_id'       => 'required',
             'emp_dept'      => 'required',
             'use_date'      => 'required | date',
             'resp_date'     => 'required | date',
@@ -112,6 +113,7 @@ class CreatePumController extends Controller
         $file_data      = $request->file_data;
         $pin            = $request->pin;
         $org_id         = $request->org_id;
+        $user_id        = $request->user_id;
 
         $model          = new CreatePum();
         $insertTrx      = new trx_all();
@@ -144,6 +146,8 @@ class CreatePumController extends Controller
         $insertTrx->pum_status       = $pumStatus;
         $insertTrx->resp_status      = 'N';
         $insertTrx->org_id           = $org_id;
+        $insertTrx->created_by       = $user_id;
+        $insertTrx->creation_date    = date('Y-m-d');
         $insertTrx->files_data       = $file_data;
         $insertTrx->upload_data      = $upload_data;
         $insertTrx->save();

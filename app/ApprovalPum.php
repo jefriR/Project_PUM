@@ -68,8 +68,8 @@ class ApprovalPum extends Model
         DB::table('PUM_TRX_ALL')->where('PUM_TRX_ID', $pum_id)->update(['PUM_STATUS' => 'R', $columntemp => $app_id, $columndate => $date, 'REASON_APPROVE' => $reason_val]);
     }
 
-    public function approvePum($pum_id, $columntemp, $app_id, $columndate, $date, $pum_status){
-        DB::table('PUM_TRX_ALL')->where('PUM_TRX_ID', $pum_id)->update(['PUM_STATUS' => $pum_status, $columntemp => $app_id, $columndate => $date]);
+    public function approvePum($pum_id, $columntemp, $app_id, $columndate, $date, $pum_status, $final_date){
+        DB::table('PUM_TRX_ALL')->where('PUM_TRX_ID', $pum_id)->update(['PUM_STATUS' => $pum_status, $columntemp => $app_id, $columndate => $date, 'FINAL_DATE' => $final_date]);
     }
 
     public function checkFinalApp($pum_id, $nextApp){

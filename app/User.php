@@ -77,7 +77,7 @@ class User extends Authenticatable
 
         $dataUser   = DB::connection('api_hr')->table('hr_employees')
             ->select("hr_employees.EMP_ID", "hr_employees.EMP_NUM", "hr_employees.NAME", "hr_employees.DEPT_ID",  "hr_employees.POSITION",
-                "hr_employees.MAX_CREATE_PUM", "hr_employees.ORG_ID", "sys_r.RESP_ID", "sys_r.NAME as RESP_NAME", "sys_r.MENU_ID", "sys_r.ROLE_ID", "pum_ah.PROXY_AMOUNT_TO as MAX_AMOUNT")
+                "hr_employees.MAX_CREATE_PUM", "hr_employees.ORG_ID", "sys_r.RESP_ID", "sys_r.NAME as RESP_NAME", "sys_r.MENU_ID", "sys_r.ROLE_ID", "pum_ah.PROXY_AMOUNT_TO as MAX_AMOUNT", "sys_u.USER_ID")
             ->leftJoin('api_sys.sys_user as sys_u', 'sys_u.USER_NAME', 'hr_employees.EMP_NUM')
             ->leftJoin('api_sys.sys_user_resp as sys_ur', 'sys_ur.USER_ID', 'sys_u.USER_ID')
             ->leftJoin('api_sys.sys_resp as sys_r', 'sys_r.RESP_ID', 'sys_ur.RESP_ID')
@@ -102,4 +102,10 @@ class User extends Authenticatable
 
         return $pinUser;
     }
+
+    public function changePin($emp_id, $newPin){
+        $change = DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['PIN' => bcrypt($newPin)]);
+    }
+
+
 }

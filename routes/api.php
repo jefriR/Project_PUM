@@ -20,6 +20,7 @@ Route::POST('testarray', 'TestingController@testarray');
 //*********** User Route ******************//
 Route::POST('login',        'API\UserController@login');
 Route::POST('registerpin',  'API\UserController@registerPin');
+Route::POST('changepin',    'API\UserController@changePin');
 
 //*********** Detail PUM Route ******************//
 Route::post('detailpum',        'API\DetailPumController@detailPum');
