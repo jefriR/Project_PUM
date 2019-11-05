@@ -23,8 +23,9 @@ class ReportPum extends Model
         return $emp;
     }
 
-    public function findDataUser($emp_id, $dept_id){
-        $empData    = DB::connection('api_hr')->table('hr_employees')->select('EMP_NUM', 'NAME')->where('EMP_ID', $emp_id)->get()->toArray();
+    public function findDataUser($user_id, $dept_id){
+        $getEmpId   = DB::connection('api_sys')->table('sys_user')->select('EMP_ID')->where('USER_ID', $user_id)->get()->toArray();
+        $empData    = DB::connection('api_hr')->table('hr_employees')->select('EMP_NUM', 'NAME')->where('EMP_ID', $getEmpId[0]->EMP_ID)->get()->toArray();
         $deptData   = DB::connection('api_hr')->table('hr_departments')->select('DESCRIPTION', 'NAME')->where('DEPT_ID', $dept_id)->get()->toArray();
         $dataUser   = [$empData[0],$deptData[0]];
 
@@ -33,6 +34,7 @@ class ReportPum extends Model
 
     public function cekAppName($temp){
         $data = $temp;
+        $appId = null;
 
         foreach ($data as $app){
             for ($i = 1; $i < 5; $i++){
@@ -68,23 +70,54 @@ class ReportPum extends Model
         return $data;
     }
 
-    public function permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){
+    public function permohonanPumNonGroup($user_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){
         $search   = DB::connection('api_pum')->table('pum_trx_all as a')
             ->select('a.*','a.TRX_NUM as PUM_NUM', 'c.EMP_NUM as EMP_NUM', 'c.NAME as EMP_NAME', 'd.DESCRIPTION as DESC_PUM', 'd.AMOUNT as AMOUNT')
             ->leftJoin('api_hr.hr_employees as c', 'c.EMP_ID', 'a.EMP_ID')
             ->leftJoin('pum_trx_lines_all as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
-            ->where('a.EMP_ID', $emp_id)
-            ->where('a.DEPT_ID', $dept_id)
             ->where('a.ORG_ID', $org_id)
+            ->where('a.CREATED_BY', $user_id)
             ->whereBetween('a.TRX_DATE', [$create_start_date, $create_end_date])
+            ->whereBetween('a.FINAL_DATE', [$validate_start_date, $validate_end_date])
             ->whereIn('a.PUM_STATUS', $pum_status)
             ->whereIn('a.RESP_STATUS', $resp_status)
-            ->whereBetween('a.FINAL_DATE', [$validate_start_date, $validate_end_date])
+            ->orderBy('a.EMP_ID')
             ->get()->toArray();
 
-        $data = $this->cekAppName($search);
+        foreach ($search as $data){
+            $result = $this->cekAppName($search);
+        }
 
-        return $data;
+        return $result;
+    }
+
+    public function permohonanPum($user_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){
+        $getEmp = DB::connection('api_pum')->table('pum_trx_all as a')
+            ->selectRaw("distinct b.NAME as EMP_NAME, b.EMP_NUM as EMP_NUM, a.EMP_ID as EMP_ID, '' as dataReport")
+            ->leftJoin('api_hr.hr_employees as b', 'b.EMP_ID', 'a.EMP_ID')
+            ->where('a.CREATED_BY', $user_id)
+            ->get()->toArray();
+
+        foreach ($getEmp as $data){
+            $search   = DB::connection('api_pum')->table('pum_trx_all as a')
+                ->select('a.*','a.TRX_NUM as PUM_NUM', 'c.EMP_NUM as EMP_NUM', 'c.NAME as EMP_NAME', 'd.DESCRIPTION as DESC_PUM', 'd.AMOUNT as AMOUNT')
+                ->leftJoin('api_hr.hr_employees as c', 'c.EMP_ID', 'a.EMP_ID')
+                ->leftJoin('pum_trx_lines_all as d', 'd.PUM_TRX_ID', 'a.PUM_TRX_ID')
+                ->where('a.EMP_ID', $data->EMP_ID)
+                ->where('a.ORG_ID', $org_id)
+                ->where('a.CREATED_BY', $user_id)
+                ->whereBetween('a.TRX_DATE', [$create_start_date, $create_end_date])
+                ->whereBetween('a.FINAL_DATE', [$validate_start_date, $validate_end_date])
+                ->whereIn('a.PUM_STATUS', $pum_status)
+                ->whereIn('a.RESP_STATUS', $resp_status)
+                ->orderBy('a.EMP_ID')
+                ->get()->toArray();
+
+            $result = $this->cekAppName($search);
+            $data->dataReport = $result;
+        }
+
+        return $getEmp;
     }
 
     public function responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){

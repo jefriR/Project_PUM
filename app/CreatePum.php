@@ -28,10 +28,9 @@ class CreatePum extends Model
     }
 
     public function getDocDetail($docType){
-//        $document   = DB::table('pum_ref_doc_all')->select('doc_num', 'doc_date', 'doc_amount')->where('doc_type', $docType)->paginate(10);
-//        $docDetail  = DB::connection('api_pum');
-
-        return $docType;
+      $document   = DB::table('pum_ref_doc_all')->select('doc_num', 'doc_date', 'doc_amount')->where('DOC_TYPE', $docType)->paginate(10);
+    
+        return $document;
     }
 
     public function getTrxNum(){

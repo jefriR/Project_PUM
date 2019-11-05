@@ -15,7 +15,7 @@ class ProsesReportController extends Controller
     public function prosesReport(Request $request){
         $validator = Validator::make($request->all(), [
             'report_type'           => 'required',
-            'emp_id'                => 'required',
+            'user_id'               => 'required',
             'dept_id'               => 'required',
             'create_start_date'     => 'required',
             'create_end_date'       => 'required',
@@ -23,7 +23,6 @@ class ProsesReportController extends Controller
             'validate_end_date'     => 'required',
             'pum_status'            => 'required',
             'response_status'       => 'required',
-            'detail_report'         => 'required',
             'group_by'              => 'required',
             'org_id'                => 'required',
         ]);
@@ -33,7 +32,7 @@ class ProsesReportController extends Controller
         }
 
         $report_type        = $request->report_type;
-        $emp_id             = $request->emp_id;
+        $user_id            = $request->user_id;
         $dept_id            = $request->dept_id;
         $create_start_date  = $request->create_start_date;
         $create_end_date    = $request->create_end_date;
@@ -41,8 +40,7 @@ class ProsesReportController extends Controller
         $resp_status        = $request->response_status;
         $validate_start_date = $request->validate_start_date;
         $validate_end_date  = $request->validate_end_date;
-//        $detail_report      = $request->detail_report;
-//        $group_by           = $request->group_by;
+        $group_by           = $request->group_by;
         $org_id             = $request->org_id;
 
         if ($pum_status == 'ALL') {
@@ -83,19 +81,36 @@ class ProsesReportController extends Controller
         }
 
         $model  = new ReportPum();
-        $user   = $model->findDataUser($emp_id, $dept_id);
+        $user   = $model->findDataUser($user_id, $dept_id);
         $temp   = null;
         $today  = date('d-m-Y');
         $temp   = [$create_start_date,$create_end_date,$validate_start_date,$validate_end_date, $pum_status, $resp_status, $today];
 
         if ($report_type == 1){
-            $dataPum  = $model->permohonanPum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
+            switch ($group_by) {
+                case '-' :
+                    $dataPum  = $model->permohonanPumNonGroup($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
+                    break;
+                case 'E' :
+                    $dataPum  = $model->permohonanPum($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
+                    break;
+                case 'D' :
+                    return 3;
+                    break;
+                case 'C' :
+                    return 4;
+                    break;
+                default:
+                    return 'ERROR';
+            }
 
-            $pdf = PDF::loadview('permohonanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp]);
+//            dd($dataPum);
+
+            $pdf = PDF::loadview('permohonanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp, 'GROUP' =>$group_by]);
             $pdf->setPaper('A4', 'landscape');
-            return $pdf->download('LISTING DATA PAPERLESS UMD');
+            return $pdf->download('Report.pdf');
         } elseif ($report_type == 2){
-            $dataPum  = $model->responsePum($emp_id, $dept_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
+            $dataPum  = $model->responsePum($user_id, $dept_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
 
             $pdf = PDF::loadview('pertanggungjawabanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp]);
             $pdf->setPaper('A4', 'potrait');

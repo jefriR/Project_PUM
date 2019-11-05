@@ -111,7 +111,7 @@ class ApprovalController extends Controller
                 $model->rejectPum($pum_id,$columntemp,$app_id,$columndate,$date, $reason_val);
 
                 $this->saveStatusApprovalPum($app_id,$pum_id,'R');
-                return response()->json(['error' => false, 'message' => 'REJECT SUCCESS'], 200);
+//                return response()->json(['error' => false, 'message' => 'REJECT SUCCESS'], 200);
 
             } elseif ($kodeApp == 1) {
                 // Cek apakah sudah final approve atau belum
@@ -135,7 +135,7 @@ class ApprovalController extends Controller
                 return response()->json(['error' => true, 'message' => "ERROR"], 400);
             }
         }
-        return response()->json(['error' => false, 'message' => 'APPROVAL SUCCESS'], 200);
+        return response()->json(['error' => false, 'message' => 'PROCESS SUCCESS'], 200);
     }
 
 

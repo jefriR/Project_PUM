@@ -17,6 +17,9 @@ class DetailPum extends Model
             ->where('pum_pta.pum_trx_id', $pum_trx_id)
             ->get()->toArray();
 
+        $getNameTrxType = DB::connection('api_pum')->table('pum_trx_type_all')->select('DESCRIPTION')->where('PUM_TRX_TYPE_ID', $getDataPum[0]->PUM_TRX_TYPE_ID)->get()->toArray();
+        $getDataPum[0]->PUM_TRX_TYPE_ID = $getNameTrxType[0];
+
         if ($getDataPum == null){
             return $getDataPum;
         }
