@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\ReportAPI;
 
 use App\ReportPum;
-use Carbon\Carbon;
-use Dompdf\Dompdf;
 use PDF;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -83,8 +81,10 @@ class ProsesReportController extends Controller
         $model  = new ReportPum();
         $user   = $model->findDataUser($user_id, $dept_id);
         $temp   = null;
-        $today  = date('d-m-Y');
-        $temp   = [$create_start_date,$create_end_date,$validate_start_date,$validate_end_date, $pum_status, $resp_status, $today];
+        date_default_timezone_set('Asia/Jakarta');
+        $date   = date('d-m-Y');
+        $time   = date('H:i:s');
+        $temp   = [$create_start_date,$create_end_date,$validate_start_date,$validate_end_date, $pum_status, $resp_status, $date,$time];
 
         if ($report_type == 1){
             switch ($group_by) {
@@ -92,13 +92,13 @@ class ProsesReportController extends Controller
                     $dataPum  = $model->permohonanPumNonGroup($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
                     break;
                 case 'E' :
-                    $dataPum  = $model->permohonanPum($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
+                    $dataPum  = $model->permohonanPumGroupEmp($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
                     break;
                 case 'D' :
-                    return 3;
+                    $dataPum  = $model->permohonanPumGroupDept($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
                     break;
                 case 'C' :
-                    return 4;
+                    $dataPum  = $model->permohonanPumGroupDate($user_id, $create_start_date, $create_end_date, $pum_sts, $resp_sts, $validate_start_date, $validate_end_date, $org_id);
                     break;
                 default:
                     return 'ERROR';
@@ -116,12 +116,6 @@ class ProsesReportController extends Controller
             $pdf->setPaper('A4', 'potrait');
             return $pdf->download('LISTING DATA PAPERLESS UMD');
         }
-
-//        return response()->json(['error' => false, 'message' => "Data Available", 'data' => $dataPum], 200);
-
-
-
-
     }
 
 

@@ -1,9 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>REPORT</title>
+    <title>REPORTING</title>
 
     <style>
+        .date{
+            line-height: 1.5px;
+            font-style: italic;
+        }
         .headerReport{
             text-align: center;
             font-size: 12px;
@@ -17,6 +21,8 @@
             border-collapse:collapse;
             margin:0 auto;
             font-size: 11px;
+            /*margin-left: -10px;*/
+            /*margin-right: 10px;*/
         }
         td, tr, th{
             border:1px solid #333;
@@ -38,6 +44,7 @@
 
 <div class="date">
     <p>Tgl Cetak : {{ $TEMP[6] }}</p>
+    <p>Pkl Cetak : {{ $TEMP[7] }}</p>
 </div>
 
 <div class="headerReport">
@@ -50,24 +57,25 @@
     <p>RESP Status : {{ $TEMP[5] }}</p>
 </div>
 
-<p style="color: white">{{ $i = 1 }} {{ $total = 0 }} {{ $grandTotal = 0 }}</p>
+<p style="color: white">{{ $i = 1 }}</p>
 <table class="table table-bordered table-responsive">
     @if($GROUP == '-')
+        {{ $grandTotal = 0 }}
         <thead>
         <tr>
-            <th style="width: 30px">No</th>
-            <th style="width: 50px">PUM <br> Number</th>
-            <th style="width: 50px">Create <br> Date</th>
-            <th style="width: 50px">Use Date</th>
-            <th style="width: 50px">Emp <br> Number</th>
-            <th style="width: 100px">Emp Name</th>
+            <th style="width: 20px">No</th>
+            <th style="width: 60px">PUM <br> Number</th>
+            <th style="width: 60px">Create <br> Date</th>
+            <th style="width: 60px">Use Date</th>
+            <th style="width: 60px">Emp <br> Number</th>
+            <th style="width: 110px">Emp Name</th>
             <th style="width: 35px">PUM <br> Status</th>
             <th style="width: 30px">RESP <br> Status</th>
-            <th style="width: 200px">Description</th>
-            <th style="width: 65px">Appr 1</th>
-            <th style="width: 65px">Appr 2</th>
-            <th style="width: 65px">Appr 3</th>
-            <th style="width: 65px">Appr 4</th>
+            <th style="width: 190px">Description</th>
+            <th style="width: 70px">Appr 1</th>
+            <th style="width: 70px">Appr 2</th>
+            <th style="width: 70px">Appr 3</th>
+            <th style="width: 70px">Appr 4</th>
             <th style="width: 65px">PUM <br> Amount</th>
         </tr>
         </thead>
@@ -93,10 +101,11 @@
         @endforeach
         <tr>
             <td colspan="13"><strong>GRAND TOTAL</strong></td>
-            <td>{{ $grandTotal}}</td>
+            <td><strong>Rp.{{ $grandTotal}}</strong></td>
         </tr>
         </tbody>
     @elseif($GROUP == 'E')
+        {{ $grandTotal = 0 }}
         <thead>
         <tr>
             <th style="width: 30px">No</th>
@@ -115,6 +124,7 @@
         </thead>
         <tbody>
         @foreach($datas as $data)
+            {{ $total = 0 }}
             <tr>
                 <td colspan="12" style="text-align: left; padding-left: 10px">{{$data->EMP_NUM}} - {{$data->EMP_NAME}}</td>
             </tr>
@@ -133,15 +143,130 @@
                     <td>{{ $detail->APPROVAL_EMP_ID4}}</td>
                     <td>Rp.{{ $detail->AMOUNT}}</td>
                 </tr>
+                {{$total = $total + $detail->AMOUNT}}
             @endforeach
             <tr>
                 <td colspan="11"><strong>TOTAL</strong></td>
-                <td colspan="1">{{ $total = $total + $detail->AMOUNT }}</td>
+                <td colspan="1"><strong>{{ $total}}</strong></td>
+                {{$grandTotal = $grandTotal + $total}}
             </tr>
         @endforeach
         <tr>
             <td colspan="11"><strong>GRAND TOTAL</strong></td>
-            <td>{{ $grandTotal}}</td>
+            <td><strong>Rp.{{ $grandTotal}}</strong></td>
+        </tr>
+        </tbody>
+    @elseif($GROUP == 'D')
+        {{ $grandTotal = 0 }}
+        <thead>
+        <tr>
+            <th style="width: 20px">No</th>
+            <th style="width: 60px">PUM <br> Number</th>
+            <th style="width: 60px">Create <br> Date</th>
+            <th style="width: 60px">Use Date</th>
+            <th style="width: 60px">Emp <br> Number</th>
+            <th style="width: 110px">Emp Name</th>
+            <th style="width: 35px">PUM <br> Status</th>
+            <th style="width: 30px">RESP <br> Status</th>
+            <th style="width: 190px">Description</th>
+            <th style="width: 70px">Appr 1</th>
+            <th style="width: 70px">Appr 2</th>
+            <th style="width: 70px">Appr 3</th>
+            <th style="width: 70px">Appr 4</th>
+            <th style="width: 65px">PUM <br> Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($datas as $data)
+            {{ $total = 0 }}
+            <tr>
+                <td colspan="14" style="text-align: left; padding-left: 10px">{{$data->DEPT_NAME}}</td>
+            </tr>
+            @foreach($data->dataReport as $detail)
+                <tr>
+                    <td>{{ $i++ }}</td>
+                    <td>{{ $detail->PUM_NUM}}</td>
+                    <td>{{ $detail->TRX_DATE }}</td>
+                    <td>{{ $detail->USE_DATE }}</td>
+                    <td>{{ $detail->EMP_NUM }}</td>
+                    <td>{{ $detail->EMP_NAME }}</td>
+                    <td>{{ $detail->PUM_STATUS}}</td>
+                    <td>{{ $detail->RESP_STATUS}}</td>
+                    <td>@if(strlen($detail->DESC_PUM) > 40) {{substr($detail->DESC_PUM,0,37).'...'}} @else {{$detail->DESC_PUM}} @endif</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID1}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID2}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID3}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID4}}</td>
+                    <td>Rp.{{ $detail->AMOUNT}}</td>
+                </tr>
+                {{$total = $total + $detail->AMOUNT}}
+
+            @endforeach
+            <tr>
+                <td colspan="13"><strong>TOTAL</strong></td>
+                <td colspan="1"><strong>Rp.{{ $total}}</strong></td>
+                {{$grandTotal = $grandTotal + $total}}
+            </tr>
+        @endforeach
+        <tr>
+            <td colspan="13"><strong>GRAND TOTAL</strong></td>
+            <td><strong>Rp.{{$grandTotal}}</strong></td>
+        </tr>
+        </tbody>
+    @elseif($GROUP == 'C')
+        {{$grandTotal = 0}}
+        <thead>
+        <tr>
+            <th style="width: 20px">No</th>
+            <th style="width: 60px">PUM <br> Number</th>
+            <th style="width: 60px">Create <br> Date</th>
+            <th style="width: 60px">Use Date</th>
+            <th style="width: 60px">Emp <br> Number</th>
+            <th style="width: 110px">Emp Name</th>
+            <th style="width: 35px">PUM <br> Status</th>
+            <th style="width: 30px">RESP <br> Status</th>
+            <th style="width: 190px">Description</th>
+            <th style="width: 70px">Appr 1</th>
+            <th style="width: 70px">Appr 2</th>
+            <th style="width: 70px">Appr 3</th>
+            <th style="width: 70px">Appr 4</th>
+            <th style="width: 65px">PUM <br> Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($datas as $data)
+            {{$total = 0}}
+            <tr>
+                <td colspan="14" style="text-align: left; padding-left: 10px">{{$data->TRX_DATE}}</td>
+            </tr>
+            @foreach($data->dataReport as $detail)
+                <tr>
+                    <td>{{ $i++ }}</td>
+                    <td>{{ $detail->PUM_NUM}}</td>
+                    <td>{{ $detail->TRX_DATE }}</td>
+                    <td>{{ $detail->USE_DATE }}</td>
+                    <td>{{ $detail->EMP_NUM }}</td>
+                    <td>{{ $detail->EMP_NAME }}</td>
+                    <td>{{ $detail->PUM_STATUS}}</td>
+                    <td>{{ $detail->RESP_STATUS}}</td>
+                    <td>@if(strlen($detail->DESC_PUM) > 40) {{substr($detail->DESC_PUM,0,37).'...'}} @else {{$detail->DESC_PUM}} @endif</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID1}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID2}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID3}}</td>
+                    <td>{{ $detail->APPROVAL_EMP_ID4}}</td>
+                    <td>Rp.{{ $detail->AMOUNT}}</td>
+                </tr>
+                {{$total = $total + $detail->AMOUNT}}
+            @endforeach
+            <tr>
+                <td colspan="13"><strong>TOTAL</strong></td>
+                <td colspan="1"><strong>{{ $total}}</strong></td>
+                {{$grandTotal = $grandTotal + $total}}
+            </tr>
+        @endforeach
+        <tr>
+            <td colspan="13"><strong>GRAND TOTAL</strong></td>
+            <td><strong>Rp.{{$grandTotal}}</strong></td>
         </tr>
         </tbody>
     @endif

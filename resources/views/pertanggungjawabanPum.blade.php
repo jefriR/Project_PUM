@@ -1,9 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>REPORT</title>
+    <title>REPORTING</title>
 
     <style>
+        .date{
+            line-height: 1.5px;
+            font-style: italic;
+        }
         .headerReport{
             text-align: center;
             font-size: 12px;
@@ -38,6 +42,7 @@
 
 <div class="date">
     <p>Tgl Cetak : {{ $TEMP[6] }}</p>
+    <p>Pkl Cetak : {{ $TEMP[7] }}</p>
 </div>
 
 <div class="headerReport">
@@ -77,7 +82,7 @@
     @endforeach
     <tr>
         <td colspan="4"><strong>GRAND TOTAL</strong></td>
-        <td>{{ $grandTotal}}</td>
+        <td>Rp.{{$grandTotal}}</td>
     </tr>
     </tbody>
 </table>
