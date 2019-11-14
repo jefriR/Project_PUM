@@ -136,6 +136,14 @@ class CreatePumController extends Controller
             $pumStatus = 'A';
         }
 
+        //Rename Image's Name For upload_data
+        $trxNum         = $model->getTrxNum();
+        $upload_data    = $trxNum.'_0';
+        $destination    = public_path();
+        $getFileName    = $file_data->getClientOriginalName();
+        $file_data->move($destination, $getFileName);
+
+
         $insertTrx->trx_num          = $trxNum;
         $insertTrx->trx_date         = date('Y-m-d');
         $insertTrx->emp_id           = $emp_id;
@@ -148,7 +156,7 @@ class CreatePumController extends Controller
         $insertTrx->org_id           = $org_id;
         $insertTrx->created_by       = $user_id;
         $insertTrx->creation_date    = date('Y-m-d');
-        $insertTrx->files_data       = $file_data;
+        $insertTrx->files_data       = $getFileName;
         $insertTrx->upload_data      = $upload_data;
         $insertTrx->save();
 

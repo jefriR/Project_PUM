@@ -9,13 +9,16 @@ class DetailPum extends Model
 {
     public function getDataPum($pum_trx_id){
         $getDataPum = DB::connection('api_pum')->table('pum_trx_all as pum_pta')
-            ->select("pum_pta.PUM_TRX_ID", "pum_pta.TRX_NUM", "pum_pta.TRX_DATE", "pum_pta.USE_DATE", "pum_pta.EMP_ID", "pum_pta.RESP_ESTIMATE_DATE", "pum_pta.UPLOAD_DATA",
+            ->select("pum_pta.PUM_TRX_ID", "pum_pta.TRX_NUM", "pum_pta.TRX_DATE", "pum_pta.USE_DATE", "pum_pta.EMP_ID", "pum_pta.RESP_ESTIMATE_DATE", "pum_pta.UPLOAD_DATA", "pum_pta.FILES_DATA as FILE_DATA",
                 "pum_ptla.PUM_TRX_TYPE_ID", "pum_ptla.DESCRIPTION", "pum_ptla.AMOUNT", "hr_emp.EMP_NUM", "hr_emp.NAME", "hr_dept.DESCRIPTION as DEPARTMENT", "hr_dept.DEPT_ID as DATA_APP")
             ->leftJoin('pum_trx_lines_all as pum_ptla', 'pum_pta.PUM_TRX_ID','pum_ptla.PUM_TRX_ID')
             ->leftJoin('api_hr.hr_employees as hr_emp', 'hr_emp.EMP_ID', 'pum_pta.EMP_ID')
             ->leftJoin('api_hr.hr_departments as hr_dept', 'hr_dept.DEPT_ID', 'pum_pta.DEPT_ID')
             ->where('pum_pta.pum_trx_id', $pum_trx_id)
             ->get()->toArray();
+
+        $link = url('laravel/public/'.$getDataPum[0]->FILE_DATA);
+        $getDataPum[0]->FILE_DATA = $link;
 
         $getNameTrxType = DB::connection('api_pum')->table('pum_trx_type_all')->select('DESCRIPTION')->where('PUM_TRX_TYPE_ID', $getDataPum[0]->PUM_TRX_TYPE_ID)->get()->toArray();
         $getDataPum[0]->PUM_TRX_TYPE_ID = $getNameTrxType[0];

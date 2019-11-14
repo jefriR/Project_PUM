@@ -97,5 +97,29 @@ class UserController extends Controller
         return response()->json(['error' => false, 'message' => "Update Pin Success "], 200);
     }
 
+    public function profilePicture(Request $request){
+        $validator = Validator::make($request->all(), [
+            'emp_id'    => 'required',
+            'image'     => 'required | file',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $emp_id = $request->emp_id;
+        $image  = $request->image;
+
+        $destination    = public_path('images/photo_profile');
+        $getExt         = $image->getClientOriginalExtension();
+        $fileName       = 'PP_'.$emp_id.'.'.$getExt;
+        $image->move($destination, $fileName);
+
+        $model  = new User();
+        $model->changepicture($emp_id,$fileName);
+
+        return response()->json(['error' => false, 'message' => "Update Picture Success "], 200);
+    }
+
 
 }

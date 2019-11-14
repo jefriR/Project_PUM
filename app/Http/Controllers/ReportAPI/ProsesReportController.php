@@ -114,7 +114,9 @@ class ProsesReportController extends Controller
 
             $pdf = PDF::loadview('pertanggungjawabanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp]);
             $pdf->setPaper('A4', 'potrait');
-            return $pdf->download('LISTING DATA PAPERLESS UMD');
+            $dt = $pdf->download('LISTING DATA PAPERLESS UMD');
+
+            return response()->json(['error' => false, 'message' => 'PROCESS SUCCESS', 'data' => $dt], 200);
         }
     }
 
