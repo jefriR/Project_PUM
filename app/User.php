@@ -77,13 +77,11 @@ class User extends Authenticatable
 
         $dataUser   = DB::connection('api_hr')->table('hr_employees')
             ->select("hr_employees.EMP_ID", "hr_employees.EMP_NUM", "hr_employees.NAME", "hr_employees.DEPT_ID",  "hr_employees.POSITION",
-                "hr_employees.MAX_CREATE_PUM", "hr_employees.ORG_ID", "sys_r.RESP_ID", "sys_r.NAME as RESP_NAME", "sys_r.MENU_ID", "sys_r.ROLE_ID", "pum_ah.PROXY_AMOUNT_TO as MAX_AMOUNT", "sys_u.USER_ID", "sys_u.PHOTO_PROFILE")
+                "hr_employees.MAX_CREATE_PUM", "hr_employees.ORG_ID", "sys_r.RESP_ID", "sys_r.NAME as RESP_NAME", "sys_r.MENU_ID", "sys_r.ROLE_ID", "sys_u.USER_ID", "sys_u.PHOTO_PROFILE")
             ->leftJoin('api_sys.sys_user as sys_u', 'sys_u.USER_NAME', 'hr_employees.EMP_NUM')
             ->leftJoin('api_sys.sys_user_resp as sys_ur', 'sys_ur.USER_ID', 'sys_u.USER_ID')
             ->leftJoin('api_sys.sys_resp as sys_r', 'sys_r.RESP_ID', 'sys_ur.RESP_ID')
-            ->leftJoin('api_pum.pum_app_hierar as pum_ah', 'pum_ah.EMP_ID', 'hr_employees.EMP_ID')
-            ->where('hr_employees.EMP_NUM', $emp_num)
-            ->where('pum_ah.ACTIVE_FLAG', 'Y')
+            ->where('hr_employees.EMP_NUM', $data_hr[0]->EMP_ID)
             ->get()->toArray();
 
         $link = url('laravel/public/images/photo_profile/'.$dataUser[0]->PHOTO_PROFILE);
