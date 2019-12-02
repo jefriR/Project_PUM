@@ -108,7 +108,13 @@ class UserController extends Controller
         }
 
         $emp_id = $request->emp_id;
-        $image  = $request->image;
+        $image  = $request->file('image');
+
+        //CekFormatFile
+        $ext    = $image->getClientOriginalExtension();
+        if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png'){
+            return response()->json(['error' => true, 'message' => "Format File only .jpg, .jpeg, .png"], 400);
+        }
 
         $destination    = public_path('images/photo_profile');
         $getExt         = $image->getClientOriginalExtension();

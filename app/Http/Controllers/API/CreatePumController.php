@@ -110,7 +110,7 @@ class CreatePumController extends Controller
         $trx_type       = $request->trx_type;
         $description    = $request->description;
         $amount         = $request->amount;
-        $file_data      = $request->file_data;
+        $file_data      = $request->file('file_data');
         $pin            = $request->pin;
         $org_id         = $request->org_id;
         $user_id        = $request->user_id;
@@ -119,9 +119,12 @@ class CreatePumController extends Controller
         $insertTrx      = new trx_all();
         $insertTrxLines = new trx_lines_all();
         $user           = new User();
-        
-        $trxNum         = $model->getTrxNum();
-        $upload_data    = $trxNum.'_0';
+
+        //CekFormatFile
+        $ext    = $file_data->getClientOriginalExtension();
+        if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'pdf'){
+            return response()->json(['error' => true, 'message' => "Format File only .jpg, .jpeg, .png, .pdf"], 400);
+        }
 
         // Cek PIN user sebelum Create PUM
         $getPin = $user->checkPin($emp_id);
@@ -139,7 +142,7 @@ class CreatePumController extends Controller
         //Rename Image's Name For upload_data
         $trxNum         = $model->getTrxNum();
         $upload_data    = $trxNum.'_0';
-        $destination    = public_path();
+        $destination    = public_path('/uploadData');
         $getFileName    = $file_data->getClientOriginalName();
         $file_data->move($destination, $getFileName);
 
