@@ -12,7 +12,8 @@ class HistoryPum extends Model
             ->where('EMP_ID', $emp_id)
             ->whereIn('PUM_STATUS', $status)
             ->whereBetween('created_at', [$start_date,$end_date])
-            ->orderByDesc('TRX_DATE')->get()->toArray();
+            ->orderByDesc('TRX_DATE')
+            ->orderByDesc('PUM_TRX_ID')->get()->toArray();
 
         return $data;
     }

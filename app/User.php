@@ -57,7 +57,7 @@ class User extends Authenticatable
     }
 
     public function login($emp_num, $password){
-        $checkEmpNum    = DB::connection('api_sys')->table('sys_user')->select('*')->where('USER_NAME', $emp_num)->where('ACTIVE_FLAG', 'Y')->get()->toArray();
+        $checkEmpNum    = DB::connection('api_sys')->table('sys_user')->select('*')->where('USER_NAME', $emp_num)->where('ACTIVE_FLAG', 'Y')->where('PIN','<>' , null)->get()->toArray();
 
         if ($checkEmpNum == null){
             return 1;
@@ -74,6 +74,7 @@ class User extends Authenticatable
     public function getDataUser($emp_num){
         $data_hr        = DB::connection('api_hr')->table('hr_employees')->select("EMP_ID", "EMP_NUM", "NAME", "DEPT_ID", "MAX_CREATE_PUM", "ORG_ID")->where('EMP_NUM', $emp_num)->where('ACTIVE_FLAG', 'Y')->get()->toArray();
         $getMaxAmount   = DB::connection('api_pum')->table('pum_app_hierar')->select('*')->where('EMP_ID', $data_hr[0]->EMP_ID)->where('ACTIVE_FLAG', 'Y')->orderByDesc('PROXY_AMOUNT_TO')->first();
+        $getMinAmount   = DB::connection('api_pum')->table('pum_app_hierar')->select('*')->where('EMP_ID', $data_hr[0]->EMP_ID)->where('ACTIVE_FLAG', 'Y')->orderBy('PROXY_AMOUNT_FROM')->first();
 
         $dataUser   = DB::connection('api_hr')->table('hr_employees')
             ->select("hr_employees.EMP_ID", "hr_employees.EMP_NUM", "hr_employees.NAME", "hr_employees.DEPT_ID",  "hr_employees.POSITION",
@@ -81,16 +82,22 @@ class User extends Authenticatable
             ->leftJoin('api_sys.sys_user as sys_u', 'sys_u.USER_NAME', 'hr_employees.EMP_NUM')
             ->leftJoin('api_sys.sys_user_resp as sys_ur', 'sys_ur.USER_ID', 'sys_u.USER_ID')
             ->leftJoin('api_sys.sys_resp as sys_r', 'sys_r.RESP_ID', 'sys_ur.RESP_ID')
-            ->where('hr_employees.EMP_NUM', $data_hr[0]->EMP_ID)
+            ->where('hr_employees.EMP_ID', $data_hr[0]->EMP_ID)
             ->get()->toArray();
 
-        $link = url('laravel/public/images/photo_profile/'.$dataUser[0]->PHOTO_PROFILE);
+        if ($dataUser[0]->PHOTO_PROFILE == null){
+            $link = url('images/photo_profile/user.png');
+        } else {
+            $link = url('images/photo_profile/'.$dataUser[0]->PHOTO_PROFILE);
+        }
         $dataUser[0]->PHOTO_PROFILE = $link;
 
         if ($getMaxAmount == null){
             $dataUser[0]->MAX_AMOUNT = 0;
+            $dataUser[0]->MIN_AMOUNT = 0;
         } else {
             $dataUser[0]->MAX_AMOUNT = $getMaxAmount->PROXY_AMOUNT_TO;
+            $dataUser[0]->MIN_AMOUNT = $getMinAmount->PROXY_AMOUNT_FROM;
         }
 
         return $dataUser[0];

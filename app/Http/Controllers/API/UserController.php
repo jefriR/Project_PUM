@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -119,12 +120,15 @@ class UserController extends Controller
         $destination    = public_path('images/photo_profile');
         $getExt         = $image->getClientOriginalExtension();
         $fileName       = 'PP_'.$emp_id.'.'.$getExt;
+        $link           = url('images/photo_profile/'.$fileName);
+
+        File::delete(['images/photo_profile/'.$fileName]);
         $image->move($destination, $fileName);
 
         $model  = new User();
         $model->changepicture($emp_id,$fileName);
 
-        return response()->json(['error' => false, 'message' => "Update Picture Success "], 200);
+        return response()->json(['error' => false, 'message' => "Update Picture Success", 'data' => $link], 200);
     }
 
 

@@ -30,8 +30,14 @@ class DetailPum extends Model
         $getDataPum = $getDataPum[0];
         $getAppId   = $this->getAppId($getDataPum->EMP_ID,$getDataPum->AMOUNT);
 
-        $data1 = $getAppId[0];
-        $data2 = $getAppId[1];
+        if (sizeof($getAppId) > 1){
+            $data1 = $getAppId[0];
+            $data2 = $getAppId[1];
+        } else {
+            $data1 = $getAppId[0];
+            $data2 = $getAppId[0];
+        }
+
         $getNameApp1    = DB::connection('api_hr')->table('hr_employees')->select("EMP_ID", "NAME")->where('EMP_ID', $data1->APPROVAL_EMP_ID1)->orWhere('EMP_ID', $data2->APPROVAL_EMP_ID1)->get()->toArray();
         $getNameApp2    = DB::connection('api_hr')->table('hr_employees')->select("EMP_ID", "NAME")->where('EMP_ID', $data1->APPROVAL_EMP_ID2)->orWhere('EMP_ID', $data2->APPROVAL_EMP_ID2)->get()->toArray();
         $getNameApp3    = DB::connection('api_hr')->table('hr_employees')->select("EMP_ID", "NAME")->where('EMP_ID', $data1->APPROVAL_EMP_ID3)->orWhere('EMP_ID', $data2->APPROVAL_EMP_ID3)->get()->toArray();
