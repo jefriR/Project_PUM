@@ -9,7 +9,7 @@ class DetailPum extends Model
 {
     public function getDataPum($pum_trx_id){
         $getDataPum = DB::connection('api_pum')->table('pum_trx_all as pum_pta')
-            ->select("pum_pta.PUM_TRX_ID", "pum_pta.TRX_NUM", "pum_pta.TRX_DATE", "pum_pta.USE_DATE", "pum_pta.EMP_ID", "pum_pta.RESP_ESTIMATE_DATE", "pum_pta.UPLOAD_DATA", "pum_pta.FILES_DATA as FILE_DATA",
+            ->select("pum_pta.PUM_TRX_ID", "pum_pta.TRX_NUM", "pum_pta.TRX_DATE", "pum_pta.USE_DATE", "pum_pta.EMP_ID","pum_pta.REASON_APPROVE", "pum_pta.RESP_ESTIMATE_DATE", "pum_pta.UPLOAD_DATA", "pum_pta.FILES_DATA as FILE_DATA",
                 "pum_ptla.PUM_TRX_TYPE_ID", "pum_ptla.DESCRIPTION", "pum_ptla.AMOUNT", "hr_emp.EMP_NUM", "hr_emp.NAME", "hr_dept.DESCRIPTION as DEPARTMENT", "hr_dept.DEPT_ID as DATA_APP")
             ->leftJoin('pum_trx_lines_all as pum_ptla', 'pum_pta.PUM_TRX_ID','pum_ptla.PUM_TRX_ID')
             ->leftJoin('api_hr.hr_employees as hr_emp', 'hr_emp.EMP_ID', 'pum_pta.EMP_ID')

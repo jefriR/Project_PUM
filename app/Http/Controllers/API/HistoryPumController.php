@@ -30,7 +30,7 @@ class HistoryPumController extends Controller
         } else {
             $status = ['A', 'N', 'I', 'R', 'APP1', 'APP2', 'APP3', 'APP4', 'APP5'];
             $start_date = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
-            $end_date   = date('Y-m-d');
+            $end_date   = date('Y-m-d H:i:s');
         }
 
 
@@ -63,9 +63,9 @@ class HistoryPumController extends Controller
             $start_date = $request->start_date;
             $end_date   = $request->end_date;
         } else {
-            $status = ['APP', 'R'];
+            $status = ['R', 'APP'];
             $start_date = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
-            $end_date   = date('Y-m-d');
+            $end_date   = date('Y-m-d H:i:s');
         }
 
 

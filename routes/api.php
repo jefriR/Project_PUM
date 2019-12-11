@@ -22,6 +22,7 @@ Route::POST('login',        'API\UserController@login');
 Route::POST('registerpin',  'API\UserController@registerPin');
 Route::POST('changepin',    'API\UserController@changePin');
 Route::POST('profilepicture',    'API\UserController@profilePicture');
+Route::POST('tokenfcm',    'API\UserController@tokenFcm');
 
 //*********** Detail PUM Route ******************//
 Route::post('detailpum',        'API\DetailPumController@detailPum');

@@ -131,5 +131,24 @@ class UserController extends Controller
         return response()->json(['error' => false, 'message' => "Update Picture Success", 'data' => $link], 200);
     }
 
+    public function tokenFcm(Request $request){
+        $validator = Validator::make($request->all(), [
+            'emp_id'    => 'required',
+            'token'     => 'required | string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $emp_id = $request->emp_id;
+        $token  = $request->token;
+
+        $model  = new User();
+        $model->tokenFcm($emp_id,$token);
+
+        return response()->json(['error' => false, 'message' => "Token  Created Successfully"], 200);
+    }
+
 
 }

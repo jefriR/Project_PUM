@@ -92,7 +92,6 @@ class CreatePumController extends Controller
             'description'   => 'required',
             'pin'           => 'required',
             'amount'        => 'required',
-            'file_data'     => 'required | file',
             'org_id'        => 'required',
         ]);
 
@@ -121,9 +120,11 @@ class CreatePumController extends Controller
         $user           = new User();
 
         //CekFormatFile
-        $ext    = $file_data->getClientOriginalExtension();
-        if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'pdf'){
-            return response()->json(['error' => true, 'message' => "Format File only .jpg, .jpeg, .png, .pdf"], 400);
+        if($file_data != null) {
+            $ext    = $file_data->getClientOriginalExtension();
+            if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'pdf'){
+                return response()->json(['error' => true, 'message' => "Format File only .jpg, .jpeg, .png, .pdf"], 400);
+            }
         }
 
         // Cek PIN user sebelum Create PUM
@@ -141,11 +142,15 @@ class CreatePumController extends Controller
 
         //Rename Image's Name For upload_data
         $trxNum         = $model->getTrxNum();
-        $upload_data    = $trxNum.'_0';
-        $destination    = public_path('/uploadData');
-        $getFileName    = $file_data->getClientOriginalName();
-        $file_data->move($destination, $getFileName);
-
+        if($file_data != null) {
+            $upload_data    = $trxNum.'_0';
+            $destination    = public_path();
+            $getFileName    = $file_data->getClientOriginalName();
+            $file_data->move($destination, $getFileName);
+        } else {
+            $upload_data    = '';
+            $getFileName    = '';
+        }
 
         $insertTrx->trx_num          = $trxNum;
         $insertTrx->trx_date         = date('Y-m-d');

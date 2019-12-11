@@ -20,7 +20,7 @@ class HistoryPum extends Model
 
     public function historyAppPum($emp_id, $status, $start_date, $end_date){
         $data   = DB::connection('api_pum')->table('history_app_pums as hap')
-            ->select('hap.created_at as ACTIONDATE','hap.STATUS', 'pta.PUM_TRX_ID', 'pta.TRX_NUM', 'pta.TRX_DATE', 'hr_emp.NAME as USERNAME', 'hr_dept.DESCRIPTION as DEPARTMENT')
+            ->select('hap.created_at as ACTIONDATE','hap.STATUS', 'pta.PUM_TRX_ID', 'pta.TRX_NUM', 'pta.TRX_DATE', 'hr_emp.NAME as USERNAME', 'hr_dept.DESCRIPTION as DEPARTMENT', 'ptla.AMOUNT')
             ->leftJoin('pum_trx_all as pta', 'pta.PUM_TRX_ID', 'hap.PUM_TRX_ID')
             ->leftJoin('pum_trx_lines_all as ptla', 'ptla.PUM_TRX_ID', 'hap.PUM_TRX_ID')
             ->leftJoin('api_hr.hr_employees as hr_emp', 'hr_emp.EMP_ID', 'pta.EMP_ID')

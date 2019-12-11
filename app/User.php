@@ -110,11 +110,15 @@ class User extends Authenticatable
     }
 
     public function changePin($emp_id, $newPin){
-        $change = DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['PIN' => bcrypt($newPin)]);
+        DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['PIN' => bcrypt($newPin)]);
     }
 
     public function changepicture($emp_id,$fileName){
-        $change = DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['PHOTO_PROFILE' => $fileName]);
+        DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['PHOTO_PROFILE' => $fileName]);
+    }
+
+    public function tokenFcm($emp_id,$token){
+        DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['TOKEN_FCM' => $token]);
     }
 
 
