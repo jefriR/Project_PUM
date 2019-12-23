@@ -104,7 +104,6 @@ class ProsesReportController extends Controller
                     return 'ERROR';
             }
 
-//            dd($dataPum);
 
             $pdf = PDF::loadview('permohonanPum',['datas'=>$dataPum, 'EMP_NAME'=>$user[0]->NAME, 'EMP_NUM'=>$user[0]->EMP_NUM, 'DEPT_CODE' => $user[1]->NAME, 'DEPT_NAME'=>$user[1]->DESCRIPTION, 'TEMP' => $temp, 'GROUP' =>$group_by]);
             $pdf->setPaper('A4', 'landscape');

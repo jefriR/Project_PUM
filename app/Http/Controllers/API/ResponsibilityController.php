@@ -34,6 +34,22 @@ class ResponsibilityController extends Controller
         return response()->json(['error' => false, 'message' => "Data Available", 'data' => $getDataPum], 200);
     }
 
+    public function getStoreCode(Request $request){
+        $validator  = Validator::make($request->all(), [
+            'org_id'    => 'required | string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>true, 'message' => "Required Parameters are Missing or Empty"], 401);
+        }
+
+        $org_id     = $request->org_id;
+        $model      = new ResponsePum();
+        $storeCode  = $model->getStoreCode($org_id);
+
+        return response()->json(['error' => false, 'message' => "Data Available", 'data' => $storeCode], 200);
+    }
+
     public function submitResponsibility(Request $request)
     {
         $validator = Validator::make($request->all(), [

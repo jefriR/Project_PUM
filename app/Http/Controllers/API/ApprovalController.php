@@ -131,9 +131,30 @@ class ApprovalController extends Controller
                     $model->approvePum($pum_id,$columntemp,$app_id,$columndate,$date, $status, null);
                     $this->saveStatusApprovalPum($app_id,$pum_id,'APP');
                 }
+
+                //Send Notification to next approval
+                foreach ($cekFinal as $data){
+                    $model  = new User();
+                    $token  = $model->getTokenFcm($data->APPROVAL);
+                    $msg    = 'You have a new Pum Request';
+
+                    if ($token != null){
+                        app('App\Http\Controllers\NotificationController')->sendNotif($token[0]->TOKEN_FCM, $msg);
+                    }
+                }
             } else {
                 return response()->json(['error' => true, 'message' => "ERROR"], 400);
             }
+
+            if ($kodeApp == 0) {
+                $msg    = 'Your Pum Request has been Rejected';
+            } else {
+                $msg    = 'Your Pum Request has been Approved';
+            }
+
+            //Send Notification to EMP
+            $token  = $model->getTokenFcm($getDataPum[0]->EMP_ID);
+            app('App\Http\Controllers\NotificationController')->sendNotif($token[0]->TOKEN_FCM, $msg);
         }
         return response()->json(['error' => false, 'message' => 'PROCESS SUCCESS'], 200);
     }

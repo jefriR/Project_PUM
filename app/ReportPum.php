@@ -84,11 +84,16 @@ class ReportPum extends Model
             ->orderBy('a.EMP_ID')
             ->get()->toArray();
 
-        foreach ($search as $data){
-            $result = $this->cekAppName($search);
+        if (!$search){
+            $result = '';
+            return $result;
+        } else {
+            foreach ($search as $data){
+                $result = $this->cekAppName($search);
+            }
+            return $result;
         }
 
-        return $result;
     }
 
     public function permohonanPumGroupEmp($user_id, $create_start_date, $create_end_date, $pum_status, $resp_status, $validate_start_date, $validate_end_date, $org_id){

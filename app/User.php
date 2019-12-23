@@ -121,5 +121,11 @@ class User extends Authenticatable
         DB::connection('api_sys')->table('sys_user')->where('EMP_ID', $emp_id)->update(['TOKEN_FCM' => $token]);
     }
 
+    public function getTokenFcm($emp_id){
+        $token  = DB::connection('api_sys')->table('sys_user')->select('TOKEN_FCM')->where('EMP_ID', $emp_id)->get()->toArray();
+
+        return $token;
+    }
+
 
 }

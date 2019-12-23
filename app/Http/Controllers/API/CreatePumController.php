@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\CreatePum;
+use App\DetailPum;
+use App\Http\Controllers\NotificationController;
 use App\trx_all;
 use App\trx_lines_all;
 use App\User;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CreatePumController extends Controller
@@ -179,7 +182,26 @@ class CreatePumController extends Controller
         $insertTrxLines->amount_remaining = $amount;
         $insertTrxLines->save();
 
+        $this->sendNotifToApp1($emp_id,$amount);
+
         return response()->json(['error' => false, 'message' => "Success to Create New Pum"], 200);
+    }
+
+    public function sendNotifToApp1($emp_id, $amount){
+        $model      = new DetailPum();
+        $approval   = $model->getApproval1($emp_id,$amount);
+
+        foreach ($approval as $data){
+            $model  = new User();
+            $token  = $model->getTokenFcm($data->APPROVAL_EMP_ID1);
+            $msg    = 'You have a new Pum Request';
+
+            if ($token != null){
+                app('App\Http\Controllers\NotificationController')->sendNotif($token[0]->TOKEN_FCM, $msg);
+            }
+        }
+
+        return $approval;
     }
 
 

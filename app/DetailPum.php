@@ -68,4 +68,14 @@ class DetailPum extends Model
 
         return $getDataPum;
     }
+
+    public function getApproval1($emp_id, $amount){
+        $approval   = DB::connection('api_pum')->table('pum_app_hierar')->select('APPROVAL_EMP_ID1')
+            ->where('EMP_ID', $emp_id)
+            ->where('ACTIVE_FLAG', 'Y')
+            ->whereRaw("? BETWEEN PROXY_AMOUNT_FROM AND PROXY_AMOUNT_TO", [$amount])
+            ->get()->toArray();
+
+        return $approval;
+    }
 }

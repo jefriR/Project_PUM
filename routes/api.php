@@ -43,6 +43,7 @@ Route::post('approvepum',       'API\ApprovalController@approvePum');
 Route::post('getdataresponse',  'API\ResponsibilityController@getListData');
 Route::post('submitresponse',   'API\ResponsibilityController@submitResponsibility');
 Route::post('historyresponse',  'API\ResponsibilityController@historyResponse');
+Route::post('getstorecode',     'API\ResponsibilityController@getStoreCode');
 
 //*********** History Pum Route ******************//
 Route::post('historycreatepum',         'API\HistoryPumController@historyCreatePum');

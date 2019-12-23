@@ -27,12 +27,15 @@ class HistoryPumController extends Controller
             $status     = [$request->status];
             $start_date = $request->start_date;
             $end_date   = $request->end_date;
+
+            if ($status[0] == 'APP'){
+                $status = ['APP1', 'APP2', 'APP3', 'APP4', 'APP5'];
+            }
         } else {
             $status = ['A', 'N', 'I', 'R', 'APP1', 'APP2', 'APP3', 'APP4', 'APP5'];
             $start_date = date('Y-m-d',mktime(0, 0, 0, date("m")-3, date("d"), date("Y")));
             $end_date   = date('Y-m-d H:i:s');
         }
-
 
         $model  = new HistoryPum();
         $data   = $model->historyCreatePum($emp_id,$status,$start_date,$end_date);

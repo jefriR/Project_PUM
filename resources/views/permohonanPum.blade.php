@@ -80,29 +80,35 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($datas as $data)
+        @if($datas == null)
             <tr>
-                <td>{{ $i++ }}</td>
-                <td>{{ $data->PUM_NUM}}</td>
-                <td>{{ $data->TRX_DATE }}</td>
-                <td>{{ $data->USE_DATE }}</td>
-                <td>{{ $data->EMP_NUM}}</td>
-                <td>{{ $data->EMP_NAME}}</td>
-                <td>{{ $data->PUM_STATUS}}</td>
-                <td>{{ $data->RESP_STATUS}}</td>
-                <td>@if(strlen($data->DESC_PUM) > 45) {{substr($data->DESC_PUM,0,42).'...'}} @else {{$data->DESC_PUM}} @endif</td>
-                <td>{{ $data->APPROVAL_EMP_ID1}}</td>
-                <td>{{ $data->APPROVAL_EMP_ID2}}</td>
-                <td>{{ $data->APPROVAL_EMP_ID3}}</td>
-                <td>{{ $data->APPROVAL_EMP_ID4}}</td>
-                <td>{{ $data->AMOUNT}}</td>
+               <td colspan="15" style="text-align: center">Data Unavailable</td>
             </tr>
-            {{ $grandTotal = $grandTotal + $data->AMOUNT }}
-        @endforeach
-        <tr>
-            <td colspan="13"><strong>GRAND TOTAL</strong></td>
-            <td><strong>Rp.{{ $grandTotal}}</strong></td>
-        </tr>
+        @else
+            @foreach($datas as $data)
+                <tr>
+                    <td>{{ $i++ }}</td>
+                    <td>{{ $data->PUM_NUM}}</td>
+                    <td>{{ $data->TRX_DATE }}</td>
+                    <td>{{ $data->USE_DATE }}</td>
+                    <td>{{ $data->EMP_NUM}}</td>
+                    <td>{{ $data->EMP_NAME}}</td>
+                    <td>{{ $data->PUM_STATUS}}</td>
+                    <td>{{ $data->RESP_STATUS}}</td>
+                    <td>@if(strlen($data->DESC_PUM) > 45) {{substr($data->DESC_PUM,0,42).'...'}} @else {{$data->DESC_PUM}} @endif</td>
+                    <td>{{ $data->APPROVAL_EMP_ID1}}</td>
+                    <td>{{ $data->APPROVAL_EMP_ID2}}</td>
+                    <td>{{ $data->APPROVAL_EMP_ID3}}</td>
+                    <td>{{ $data->APPROVAL_EMP_ID4}}</td>
+                    <td>{{ $data->AMOUNT}}</td>
+                </tr>
+                {{ $grandTotal = $grandTotal + $data->AMOUNT }}
+            @endforeach
+            <tr>
+                <td colspan="13"><strong>GRAND TOTAL</strong></td>
+                <td><strong>Rp.{{ $grandTotal}}</strong></td>
+            </tr>
+        @endif
         </tbody>
     @elseif($GROUP == 'E')
         {{ $grandTotal = 0 }}

@@ -9,13 +9,23 @@ class ResponsePum extends Model
 {
     public function getDataPum($emp_id){
         $getPum = DB::connection('api_pum')->table('pum_trx_all as pum_pta')->select('EMP_ID', 'pum_pta.PUM_TRX_ID', 'TRX_NUM', 'PO_NUMBER', 'RESP_STATUS',
-            'pum_ptla.PUM_TRX_TYPE_ID', 'pum_ptla.AMOUNT', 'pum_ptla.AMOUNT_REMAINING', 'pum_ptla.DESCRIPTION', 'DEPT_ID as TRX_TYPE')
+            'pum_ptla.PUM_TRX_TYPE_ID', 'pum_ptta.DESCRIPTION as TRX_TYPE_DESCRIPTION', 'pum_ptla.AMOUNT', 'pum_ptla.AMOUNT_REMAINING', 'pum_ptla.DESCRIPTION', 'DEPT_ID as TRX_TYPE')
             ->leftJoin('pum_trx_lines_all as pum_ptla', 'pum_ptla.pum_trx_id', 'pum_pta.pum_trx_id')
+            ->leftJoin('pum_trx_types_all as pum_ptta', 'pum_ptta.PUM_TRX_TYPE_ID', 'pum_ptla.PUM_TRX_TYPE_ID')
             ->where('pum_pta.EMP_ID', $emp_id)
             ->where('pum_pta.PUM_STATUS', 'I')
             ->get()->toArray();
 
         return $getPum;
+    }
+
+    public function getStoreCode($org_id){
+        $storeCode  = DB::connection('api_sys')->table('sys_store_code')->select('STORE_CODE', 'STORE_NAME')
+            ->where('ORG_ID', $org_id)
+            ->where('ACTIVE_FLAG', 'Y')
+            ->get()->toArray();
+
+        return $storeCode;
     }
 
     public function getTrxType($pum_trx_type_id){
